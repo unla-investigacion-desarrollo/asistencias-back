@@ -1,4 +1,4 @@
-package com.unla.RestApi.models.database;
+package com.unla.asistencias.models.database;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

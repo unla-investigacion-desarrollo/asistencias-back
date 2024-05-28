@@ -1,4 +1,4 @@
-package com.unla.RestApi.repositories;
+package com.unla.asistencias.repositories;
 
 public class Repository {
 	private IUsuarioRepository usuarioRepository;

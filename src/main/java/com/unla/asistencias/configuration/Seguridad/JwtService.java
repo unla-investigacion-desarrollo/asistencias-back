@@ -1,4 +1,4 @@
-package com.unla.RestApi.configuration.Seguridad;
+package com.unla.asistencias.configuration.Seguridad;
 
 import java.util.Arrays;
 import java.util.Date;

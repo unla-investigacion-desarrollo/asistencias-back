@@ -1,4 +1,4 @@
-package com.unla.RestApi.configuration.beans;
+package com.unla.asistencias.configuration.beans;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

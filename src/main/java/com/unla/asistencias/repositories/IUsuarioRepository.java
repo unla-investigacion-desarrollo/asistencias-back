@@ -1,4 +1,4 @@
-package com.unla.RestApi.repositories;
+package com.unla.asistencias.repositories;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.unla.RestApi.models.database.Usuario;
+import com.unla.asistencias.models.database.Usuario;
 
 @Repository("usuarioRepository")
 public interface IUsuarioRepository extends JpaRepository<Usuario,Serializable> {

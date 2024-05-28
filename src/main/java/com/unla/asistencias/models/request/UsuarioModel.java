@@ -1,4 +1,4 @@
-package com.unla.RestApi.models.request;
+package com.unla.asistencias.models.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioLogin {
+public class UsuarioModel {
+	
+	  private String nombre;
+	  private String apellido;
 	  private String email;
 	  private String password;
+	  private String rol;
 }

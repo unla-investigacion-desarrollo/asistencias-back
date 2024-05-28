@@ -1,4 +1,4 @@
-package com.unla.RestApi.models.response;
+package com.unla.asistencias.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

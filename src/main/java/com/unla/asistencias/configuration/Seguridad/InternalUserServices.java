@@ -1,4 +1,4 @@
-package com.unla.RestApi.configuration.Seguridad;
+package com.unla.asistencias.configuration.Seguridad;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.unla.RestApi.models.database.Usuario;
-import com.unla.RestApi.models.request.UsuarioLogin;
-import com.unla.RestApi.models.response.UserDTO;
-import com.unla.RestApi.repositories.IUsuarioRepository;
+import com.unla.asistencias.models.database.Usuario;
+import com.unla.asistencias.models.request.UsuarioLogin;
+import com.unla.asistencias.models.response.UserDTO;
+import com.unla.asistencias.repositories.IUsuarioRepository;
 
 @Service
 public class InternalUserServices implements UserDetailsService{

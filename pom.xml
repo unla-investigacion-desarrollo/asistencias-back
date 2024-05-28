@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.unla</groupId>
-	<artifactId>RestApi</artifactId>
+	<artifactId>asistencias</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RestApi</name>
+	<name>asistencias</name>
 	<description>Creando una Api-Rest</description>
 	<properties>
 		<java.version>17</java.version>

@@ -2,7 +2,7 @@
 
 http://localhost:8080/swagger-ui/index.html, ver: https://www.baeldung.com/spring-rest-openapi-documentation
 
-# RestApi
+# Asistencias
 
 Para correr por linea de comando se puede realizar lo siguiente:
 

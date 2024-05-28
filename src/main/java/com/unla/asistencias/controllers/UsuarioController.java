@@ -1,4 +1,4 @@
-package com.unla.RestApi.controllers;
+package com.unla.asistencias.controllers;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unla.RestApi.configuration.Seguridad.InternalUserServices;
-import com.unla.RestApi.models.response.HelloDTO;
-import com.unla.RestApi.models.response.UserDTO;
-import com.unla.RestApi.models.request.UsuarioLogin;
+import com.unla.asistencias.configuration.Seguridad.InternalUserServices;
+import com.unla.asistencias.models.response.HelloDTO;
+import com.unla.asistencias.models.response.UserDTO;
+import com.unla.asistencias.models.request.UsuarioLogin;
 
 @RestController
 @CrossOrigin("*")

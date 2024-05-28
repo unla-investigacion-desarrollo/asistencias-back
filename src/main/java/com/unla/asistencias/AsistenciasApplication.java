@@ -1,12 +1,12 @@
-package com.unla.RestApi;
+package com.unla.asistencias;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestApiApplication {
+public class AsistenciasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestApiApplication.class, args);
+		SpringApplication.run(AsistenciasApplication.class, args);
 	}
 }

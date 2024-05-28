@@ -4,5 +4,5 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml -DskipTests package
 
 FROM openjdk:20-ea-13-jdk-oraclelinux8
-COPY --from=build "home/app/target/RestApi-0.0.1-SNAPSHOT.jar" "app.jar"
+COPY --from=build "home/app/target/asistencias-0.0.1-SNAPSHOT.jar" "app.jar"
 ENTRYPOINT ["java", "-jar", "/app.jar"]

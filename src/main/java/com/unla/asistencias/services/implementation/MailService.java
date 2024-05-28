@@ -1,10 +1,10 @@
-package com.unla.RestApi.services.implementation;
+package com.unla.asistencias.services.implementation;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.unla.RestApi.services.IMailService;
+import com.unla.asistencias.services.IMailService;
 
 @Service("emailService")
 public class MailService implements IMailService {
