@@ -1,12 +1,8 @@
 package com.unla.asistencias.configuration.Seguridad;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,8 +23,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 	
 	public static final String AUTHORIZATION = "Authorization";
 	private final JwtService jwtService;
-	
-	private final Log logger = LogFactory.getLog(this.getClass());
 
 	public JwtAuthorizationFilter(JwtService jwtService){
 		this.jwtService = jwtService;
@@ -44,15 +38,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 			try {
 				authorities = jwtService.getRoles(authHeader).stream()
 						.map( role -> new SimpleGrantedAuthority(role) ).collect( Collectors.toList() );
-				logger.info("El authenticated del usuario es  " + Arrays.asList(authorities));
-				
-				UsernamePasswordAuthenticationToken authentication = 
-						new UsernamePasswordAuthenticationToken(user, null, authorities);
-				
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				
-                logger.info("authenticated user " + user + ", setting security context");
-                
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 			} catch (Exception e) {
 				e.printStackTrace();
