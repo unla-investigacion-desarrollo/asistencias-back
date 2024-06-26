@@ -31,6 +31,7 @@ services:
           "spring.datasource.username" : "$MYSQLDB_USER",
           "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
           "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQLDialect",
+          "spring.jpa.hibernate.ddl-auto" : "update",
           "logging.level.org.hibernate.sql" : "debug",
           "spring.datasource.driver-class-name": "com.mysql.cj.jdbc.Driver",
           "spring.mail.host": "smtp.gmail.com",
@@ -39,7 +40,6 @@ services:
           "spring.mail.password": "gus",
           "spring.mail.properties.mail.smtp.starttls.enable": "true",
           "spring.mail.properties.mail.smtp.auth": "true"}'
-          #"spring.jpa.hibernate.ddl-auto" : "update", To update the DLL, remember add the new script to init.sql
       volumes:
         -             ./logs:/app/logs
       networks:

@@ -14,10 +14,11 @@ public class UserDTO {
 	public UserDTO() {
 	}
 	
-	private String userName;
-	private String razon;
-	private String nombre;
-	private String apellido;
+	private String email;
+	private String name;
+	private String lastname;
+	private String password;
+	private String role;
 	private String token;
 	
 }
