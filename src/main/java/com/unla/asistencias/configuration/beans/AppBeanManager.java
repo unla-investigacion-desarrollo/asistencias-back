@@ -1,5 +1,6 @@
 package com.unla.asistencias.configuration.beans;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -11,17 +12,22 @@ import org.springframework.web.client.RestTemplate;
 public class AppBeanManager {
 
     @Bean
-    public HttpHeaders httpHeaders(){
+    HttpHeaders httpHeaders(){
         return new HttpHeaders();
     }
 
     @Bean
-    public JavaMailSender javaMailSender(){
+    JavaMailSender javaMailSender(){
         return new JavaMailSenderImpl();
     }
 
     @Bean
-    public RestTemplate restTemplate() {
+    RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
