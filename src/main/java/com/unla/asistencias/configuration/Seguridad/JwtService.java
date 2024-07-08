@@ -35,7 +35,7 @@ public class JwtService {
 	
 	private DecodedJWT verify(String autorizacion) throws Exception
 	{
-		if (!this.isBearer(autorizacion)) {
+		if (this.isBearer(autorizacion)) {
 			throw new Exception("no esta el Bearer");
 		}
 		try {

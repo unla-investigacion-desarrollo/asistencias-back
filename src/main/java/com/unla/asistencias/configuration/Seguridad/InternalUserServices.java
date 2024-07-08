@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.unla.asistencias.models.database.Usuario;
-import com.unla.asistencias.models.request.UsuarioLogin;
+import com.unla.asistencias.models.database.InternalUser;
+import com.unla.asistencias.models.request.UserLogin;
 import com.unla.asistencias.models.response.UserDTO;
 import com.unla.asistencias.repositories.IUsuarioRepository;
 
@@ -32,10 +32,10 @@ public class InternalUserServices implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Usuario> usOp = usuarioRepository.findByEmail(username);
+		Optional<InternalUser> usOp = usuarioRepository.findByEmail(username);
 		
-		Usuario us = usOp.get();
-		String Rol = "ROLE_" + us.getRol();
+		InternalUser us = usOp.get();
+		String Rol = "ROLE_" + us.getRole();
 		
 		List <GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
 		roles.add(new SimpleGrantedAuthority(Rol));
@@ -44,10 +44,10 @@ public class InternalUserServices implements UserDetailsService{
 		return UsDetails;
 	}
 
-	public UserDTO autenticarUsuario(UsuarioLogin request) {
+	public UserDTO autenticarUsuario(UserLogin request) {
 		UserDTO response = new UserDTO();
 		try {
-			Optional<Usuario> userEmail = usuarioRepository.findByEmail(request.getEmail());	
+			Optional<InternalUser> user = usuarioRepository.findByEmail(request.getEmail());	
 			UserDetails UsDetails = loadUserByUsername(request.getEmail());
 			if (UsDetails.getPassword() != null) {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -55,11 +55,10 @@ public class InternalUserServices implements UserDetailsService{
 					List<String> roles = UsDetails.getAuthorities().stream().map
 						(authority -> authority.getAuthority()).collect(Collectors.toList());					
 					String token = jwtService.createToken(UsDetails.getUsername(), roles);
-					response.setUserName(UsDetails.getUsername());
-					response.setNombre(userEmail.get().getNombre());
-					response.setApellido(userEmail.get().getApellido());
+					response.setName(user.get().getName());
+					response.setLastname(user.get().getLastName());
+					response.setEmail(user.get().getEmail());
 					response.setToken(token);
-					System.out.println(response.toString());
 				}
 			}
 		} catch (Exception e) {

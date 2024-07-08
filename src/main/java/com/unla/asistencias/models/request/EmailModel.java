@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-
 public class EmailModel {
     private String email;
     private String mensaje;

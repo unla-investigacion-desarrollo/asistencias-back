@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.unla.asistencias.models.database.Usuario;
+import com.unla.asistencias.models.database.InternalUser;
 
 @Repository("usuarioRepository")
-public interface IUsuarioRepository extends JpaRepository<Usuario,Serializable> {
+public interface IUsuarioRepository extends JpaRepository<InternalUser,Serializable> {
 	
-	Optional<Usuario> findByEmail(String email);
+	Optional<InternalUser> findByEmail(String email);
 }

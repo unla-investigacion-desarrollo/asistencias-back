@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unla.asistencias.configuration.Seguridad.InternalUserServices;
-import com.unla.asistencias.models.response.HelloDTO;
 import com.unla.asistencias.models.response.UserDTO;
-import com.unla.asistencias.models.request.UsuarioLogin;
+import com.unla.asistencias.models.request.UserLogin;
 
 @RestController
 @CrossOrigin("*")
@@ -29,7 +28,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/login")
-	public UserDTO autenticarUsuario(@RequestBody UsuarioLogin request) {
+	public UserDTO autenticarUsuario(@RequestBody UserLogin request) {
 		return internalUserServices.autenticarUsuario(request);
 	}
 
@@ -38,10 +37,9 @@ public class UsuarioController {
 		return internalUserServices.access(user.getToken());
 	}
 
-	@GetMapping("/hello")
-	@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<HelloDTO> hello(){
-		HelloDTO hello = new HelloDTO("Hello Wold!", "UNLa");
-        return ResponseEntity.status(HttpStatus.OK).body(hello);		
+	@GetMapping("/health_check")
+	@PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> healthCheck(){
+        return ResponseEntity.status(HttpStatus.OK).body("System works!");		
     }
 }
