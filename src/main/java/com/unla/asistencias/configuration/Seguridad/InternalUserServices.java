@@ -66,8 +66,4 @@ public class InternalUserServices implements UserDetailsService{
 		}
 		return response;
 	}
-
-	public List<String> access(String token) throws Exception {
-		return jwtService.getRoles(token);
-	}
 }

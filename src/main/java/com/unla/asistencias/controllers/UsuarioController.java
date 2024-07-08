@@ -1,45 +1,70 @@
 package com.unla.asistencias.controllers;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.unla.asistencias.configuration.Seguridad.InternalUserServices;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpSession;
 import com.unla.asistencias.models.response.UserDTO;
 import com.unla.asistencias.models.request.UserLogin;
 
-@RestController
-@CrossOrigin("*")
-@RequestMapping("/usuario")
+@Controller
+@RequestMapping("/user")
 public class UsuarioController {
+
+    @Value("${SERVER_API}")
+    private String serverAPI;
 	
-	private InternalUserServices internalUserServices;			
-	
-	public UsuarioController(InternalUserServices internalUserServices) {
-		this.internalUserServices = internalUserServices;
-	}
+	private final RestTemplate restTemplate;
 
-	@PostMapping("/login")
-	public UserDTO autenticarUsuario(@RequestBody UserLogin request) {
-		return internalUserServices.autenticarUsuario(request);
-	}
+    public UsuarioController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-	@PostMapping("/access")
-	public List<String> access(@RequestBody UserDTO user) throws Exception {
-		return internalUserServices.access(user.getToken());
-	}
+    @GetMapping("/login")
+    public ModelAndView login() {
+        return  new ModelAndView("login");
+    }
 
-	@GetMapping("/health_check")
-	@PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> healthCheck(){
-        return ResponseEntity.status(HttpStatus.OK).body("System works!");		
+	@GetMapping("/home")
+    public ModelAndView home(HttpSession session) {
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(user.getToken());
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<String> healthCheckResponse = restTemplate.exchange(
+            serverAPI + "/api/user/health_check", 
+            HttpMethod.GET, 
+            entity, 
+            String.class
+        );
+
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("username", user.getName());
+        modelAndView.addObject("healthCheck", healthCheckResponse.getBody());
+        return modelAndView;
+    }
+
+    @PostMapping("/login")
+    public ModelAndView loginSubmit(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        UserLogin request = new UserLogin(username, password);
+        UserDTO response = restTemplate.postForObject(serverAPI + "/api/user/login", request, UserDTO.class);
+		ModelAndView modelAndView = null;
+        if (response != null && response.getToken() != null) {
+            session.setAttribute("user", response);
+            return new ModelAndView("redirect:/user/home");
+        } else {
+			modelAndView = new ModelAndView("login");
+			modelAndView.addObject("error", "Invalid username or password");
+        }
+		return modelAndView;
     }
 }

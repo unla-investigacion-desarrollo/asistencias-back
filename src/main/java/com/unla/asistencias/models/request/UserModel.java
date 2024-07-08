@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserModel {
-	  private String nombre;
-	  private String apellido;
-	  private String email;
-	  private String password;
-	  private String rol;
+	private String nombre;
+	private String apellido;
+	private String email;
+	private String password;
+	private String rol;
 }
