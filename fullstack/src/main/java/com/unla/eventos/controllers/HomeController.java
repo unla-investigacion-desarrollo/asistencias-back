@@ -1,4 +1,4 @@
-package com.unla.grupo3.controllers;
+package com.unla.eventos.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.unla.grupo3.helpers.ViewRouteHelper;
+import com.unla.eventos.helpers.ViewRouteHelper;
 
 @Controller
 @RequestMapping("/")

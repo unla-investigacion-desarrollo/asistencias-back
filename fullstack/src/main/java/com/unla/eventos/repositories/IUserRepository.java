@@ -1,4 +1,4 @@
-package com.unla.grupo3.repositories;
+package com.unla.eventos.repositories;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.unla.grupo3.entities.User;
+import com.unla.eventos.entities.User;
 
 
 @Repository("userRepository")

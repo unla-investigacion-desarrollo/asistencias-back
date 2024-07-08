@@ -1,4 +1,4 @@
-package com.unla.grupo3.entities;
+package com.unla.eventos.entities;
 
 import java.time.LocalDateTime;
 

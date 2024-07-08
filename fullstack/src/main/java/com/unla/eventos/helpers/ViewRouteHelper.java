@@ -1,4 +1,4 @@
-package com.unla.grupo3.helpers;
+package com.unla.eventos.helpers;
 
 public class ViewRouteHelper {
 	/**** Views ****/

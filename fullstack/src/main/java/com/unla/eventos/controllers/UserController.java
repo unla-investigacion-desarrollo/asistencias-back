@@ -1,4 +1,4 @@
-package com.unla.grupo3.controllers;
+package com.unla.eventos.controllers;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.unla.grupo3.entities.User;
-import com.unla.grupo3.helpers.ViewRouteHelper;
+import com.unla.eventos.entities.User;
+import com.unla.eventos.helpers.ViewRouteHelper;
 
 
 @Controller
