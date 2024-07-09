@@ -9,6 +9,8 @@ public interface IEventService {
 	public List<Event> findAll();
 
     public Optional<Event> findById(int id);
+    
+    public Optional<Event> findByPublicFormLink(String publicFormLink);
 
     public Event save(Event event);
 
