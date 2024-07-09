@@ -1,4 +1,4 @@
-package com.unla.grupo3.services.implementation;
+package com.unla.eventos.services.implementation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.unla.grupo3.entities.UserRole;
-import com.unla.grupo3.repositories.IUserRepository;
+import com.unla.eventos.entities.UserRole;
+import com.unla.eventos.repositories.IUserRepository;
 
 @Service("userService")
 public class UserService implements UserDetailsService {
@@ -27,11 +27,11 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.unla.grupo3.entities.User user = userRepository.findByUsernameAndFetchUserRolesEagerly(username);
+		com.unla.eventos.entities.User user = userRepository.findByUsernameAndFetchUserRolesEagerly(username);
 		return buildUser(user, buildGrantedAuthorities(user.getUserRoles()));
 	}
 
-	private User buildUser(com.unla.grupo3.entities.User user, List<GrantedAuthority> grantedAuthorities) {
+	private User buildUser(com.unla.eventos.entities.User user, List<GrantedAuthority> grantedAuthorities) {
 		return new User(user.getUsername(), user.getPassword(), user.isEnabled(),
 						true, true, true, //accountNonExpired, credentialsNonExpired, accountNonLocked,
 						grantedAuthorities);

@@ -1,12 +1,12 @@
-package com.unla.grupo3;
+package com.unla.eventos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Grupo3Application {
+public class EventosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Grupo3Application.class, args);
+		SpringApplication.run(EventosApplication.class, args);
 	}
 }

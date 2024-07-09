@@ -1,4 +1,4 @@
-package com.unla.grupo3;
+package com.unla.eventos;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
