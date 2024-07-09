@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +28,10 @@ public class Event {
 
 	private String name;
 	
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime startDate;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime endDate;
 
     private String publicFormLink;

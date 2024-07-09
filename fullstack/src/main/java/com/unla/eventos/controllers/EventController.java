@@ -1,6 +1,5 @@
 package com.unla.eventos.controllers;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.unla.eventos.entities.Event;
+import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IEventService;
 
 @Controller
@@ -18,43 +18,47 @@ public class EventController {
     @Autowired
     private IEventService eventService;
 
-    // Método para listar eventos
     @GetMapping
-    public String listEvents(Model model) {
+    public String getAll(Model model) {
         model.addAttribute("events", eventService.findAll());
-        return "events";
+        return ViewRouteHelper.EVENT_INDEX;
     }
 
-    // Método para mostrar el formulario de creación de eventos
     @GetMapping("/new")
-    public String createEventForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("event", new Event());
-        return "eventForm";
+        return ViewRouteHelper.EVENT_SAVE;
     }
 
-    // Método para mostrar el formulario de edición de eventos
     @GetMapping("/edit/{id}")
-    public String editEventForm(@PathVariable int id, Model model) {
+    public String edit(@PathVariable int id, Model model) {
         Optional<Event> event = eventService.findById(id);
         if (event.isPresent()) {
-            model.addAttribute("event", event.get());
-            return "eventForm";
+            Event existingEvent = event.get();
+            model.addAttribute("event", existingEvent);
+            return ViewRouteHelper.EVENT_SAVE;
         } else {
-            return "redirect:/events";
+            return ViewRouteHelper.EVENTS_CRUD;
         }
     }
 
-    // Método para guardar un evento (nuevo o editado)
     @PostMapping
-    public String saveEvent(@ModelAttribute("event") Event event) {
-        eventService.save(event);
-        return "redirect:/events";
+    public String save(@ModelAttribute("event") Event event) {
+    	try {
+    		eventService.save(event);
+		} catch (Exception e) {
+			//TODO: Add errors on view
+		}
+        return ViewRouteHelper.EVENTS_CRUD;
     }
 
-    // Método para eliminar un evento
     @GetMapping("/delete/{id}")
-    public String deleteEvent(@PathVariable int id) {
-        eventService.deleteById(id);
-        return "redirect:/events";
+    public String delete(@PathVariable int id) {
+    	try {
+    		eventService.deleteById(id);
+		} catch (Exception e) {
+			//TODO: Add errors on view
+		}
+    	return ViewRouteHelper.EVENTS_CRUD;
     }
 }

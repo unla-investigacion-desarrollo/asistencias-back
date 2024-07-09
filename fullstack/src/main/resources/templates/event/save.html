@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create/Update Event</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#startDate", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i"
+            });
+            flatpickr("#endDate", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i"
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 th:text="${event.id != null} ? 'Edit Event' : 'Create Event'"></h1>
+    <form th:action="@{/events}" th:object="${event}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" required="required"/>
+        <label>Start Date:</label>
+        <input type="text" id="startDate" th:field="*{startDate}" th:value="${event.startDate}" required="required"/>
+        <label>End Date:</label>
+        <input type="text" id="endDate" th:field="*{endDate}" th:value="${event.endDate}" required="required"/>
+        <button type="submit">Save</button>
+    </form>
+    <a href="/events">Back to List</a>
+</body>
+</html>

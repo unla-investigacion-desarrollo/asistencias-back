@@ -7,19 +7,19 @@
     <h1>Events</h1>
     <table>
         <tr>
-            <th>ID</th>
+            <th>Number</th>
             <th>Name</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th>Public Form Link</th>
+            <th>Code</th>
             <th>Actions</th>
         </tr>
         <tr th:each="event : ${events}">
-            <td th:text="${event.id}">1</td>
-            <td th:text="${event.name}">Event Name</td>
-            <td th:text="${event.startDate}">Start Date</td>
-            <td th:text="${event.endDate}">End Date</td>
-            <td th:text="${event.publicFormLink}">Public Form Link</td>
+            <td th:text="${event.id}"></td>
+            <td th:text="${event.name}"></td>
+            <td th:text="${event.startDate}"></td>
+            <td th:text="${event.endDate}"></td>
+            <td th:text="${event.publicFormLink}"></td>
             <td>
                 <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
                 <a th:href="@{|/events/delete/${event.id}|}" onclick="return confirm('Are you sure?')">Delete</a>
