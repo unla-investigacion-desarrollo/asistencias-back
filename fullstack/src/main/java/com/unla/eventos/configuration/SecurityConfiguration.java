@@ -33,8 +33,8 @@ public class SecurityConfiguration {
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> {
-					auth.requestMatchers("/css/*", "/imgs/*", "/js/*", "/vendor/bootstrap/css/*",
-							"/vendor/jquery/*", "/vendor/bootstrap/js/*", "/api/v1/**").permitAll();
+					auth.requestMatchers("/css/*", "/imgs/*", "/js/*", "/vendor/*").permitAll();
+					auth.requestMatchers("/registro/*").permitAll();
 					auth.anyRequest().authenticated();
 				})
 				.formLogin(login -> {

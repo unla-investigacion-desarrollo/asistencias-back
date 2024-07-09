@@ -24,6 +24,10 @@ public class EventService implements IEventService {
     public Optional<Event> findById(int id) {
         return eventRepository.findById(id);
     }
+    
+    public Optional<Event> findByPublicFormLink(String publicFormLink) {
+        return eventRepository.findByPublicFormLink(publicFormLink);
+    }
 
     public Event save(Event event) {
     	Event oldEvent = eventRepository.findById(event.getId()).get();
