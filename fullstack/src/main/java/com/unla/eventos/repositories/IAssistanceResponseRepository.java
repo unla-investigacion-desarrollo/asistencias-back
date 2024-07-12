@@ -7,5 +7,5 @@ import com.unla.eventos.entities.AssistanceResponse;
 
 @Repository
 public interface IAssistanceResponseRepository extends JpaRepository<AssistanceResponse, Integer> {
-	
+	public AssistanceResponse findByQRCode(String QRCode);
 }

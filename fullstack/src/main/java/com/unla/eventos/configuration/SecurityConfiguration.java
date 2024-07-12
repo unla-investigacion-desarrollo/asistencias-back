@@ -33,7 +33,7 @@ public class SecurityConfiguration {
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> {
-					auth.requestMatchers("/css/*", "/imgs/*", "/js/*", "/vendor/*").permitAll();
+					auth.requestMatchers("/assets/*", "/css/*", "/images/*", "/js/*", "/vendor/*").permitAll();
 					auth.requestMatchers("/registro/*").permitAll();
 					auth.anyRequest().authenticated();
 				})

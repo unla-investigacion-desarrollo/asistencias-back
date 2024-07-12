@@ -24,6 +24,10 @@ public class AssistanceResponseService implements IAssistanceResponseService {
         return eventService.findByPublicFormLink(code);
     }
     
+	public AssistanceResponse findByQRCode(String QRCode) {
+		return assistanceResponseRepository.findByQRCode(QRCode);
+	}
+    
     public AssistanceResponse save(AssistanceResponse assistanceResponse) {
         return assistanceResponseRepository.save(assistanceResponse);
     }

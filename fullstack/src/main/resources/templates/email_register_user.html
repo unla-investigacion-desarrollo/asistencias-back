@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Cliente</title>
+  <style>
+        .header {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+        }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="cid:logoImage" alt="Logo">
+  </div>
+  <div class="content">
+    <p>
+      Bienvenido, nos comunicamos con usted para informarle que ya es parte del
+      <span style="font-weight: bold; font-size: 15px;"> Evento</span>
+    </p>
+    <br>
+    <p>
+      Para comenzar ingresa utilizando las
+      <span style="font-weight: bold; font-size: 15px;">siguientes credenciales</span>:
+    </p>
+    <p>
+      User: <span th:text="${username}"></span>
+      <br/>
+      Password: <span th:text="${password}"></span>
+    </p>
+    <br>
+    <p>
+      Muchas gracias. <br/>
+    </p>
+  </div>
+  <div class="footer">
+  </div>
+</body>
+</html>

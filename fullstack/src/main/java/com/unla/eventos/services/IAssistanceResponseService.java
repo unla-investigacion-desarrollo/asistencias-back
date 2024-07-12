@@ -9,5 +9,7 @@ public interface IAssistanceResponseService {
 	
 	public Optional<Event> findByPublicFormLink(String code);
 	
+	public AssistanceResponse findByQRCode(String QRCode);
+	
     public AssistanceResponse save(AssistanceResponse assistanceResponse);
 }
