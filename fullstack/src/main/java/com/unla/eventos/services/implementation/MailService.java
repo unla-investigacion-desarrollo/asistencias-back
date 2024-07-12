@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,7 +30,7 @@ public class MailService implements IMailService {
     }
 
     @Override
-    public void sendEmail(String toUser, String subject, Map<String, Object> message)
+    public void sendEmail(String toUser, String subject, Map<String, Object> message, byte[] qrCodeBytes)
             throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try{
@@ -47,6 +48,10 @@ public class MailService implements IMailService {
             ClassPathResource resource = new ClassPathResource("/static/images/logo.png");
             mimeMessageHelper.addInline("logoImage", resource);
 
+            // Adjuntar el QR Code
+            ByteArrayResource qrCodeResource = new ByteArrayResource(qrCodeBytes);
+            mimeMessageHelper.addAttachment("qrcode.png", qrCodeResource);
+            
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             log.error("ERROR en el envio de mail");
