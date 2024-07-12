@@ -18,4 +18,8 @@ public class ViewRouteHelper {
 	public final static String ROUTE = "/index";
 	public final static String EVENTS_CRUD = "redirect:/events";
 	
+	//MAILS
+	public final static String EMAIL_SENDER = "test.unla.labs@gmail.com";
+	public final static String TEMPLATE_REGISTER_USER = "email_register_user";
+	public final static String CODE = "cvlbdrttfgbhovpy";
 }

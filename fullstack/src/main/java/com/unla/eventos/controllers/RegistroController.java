@@ -1,6 +1,8 @@
 package com.unla.eventos.controllers;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
 import com.unla.eventos.services.IAssistanceResponseService;
+import com.unla.eventos.services.IMailService;
 import com.unla.eventos.services.implementation.QRCodeService;
 
 import jakarta.servlet.ServletOutputStream;
@@ -19,11 +22,18 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/registro")
 public class RegistroController {
 
+	@Autowired
+	private IMailService mailService;
+	
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
     
     @Autowired
     private QRCodeService qrCodeService;
+
+    RegistroController(IMailService mailService) {
+        this.mailService = mailService;
+    }
     
     @GetMapping("exito")
     public String exito() {
@@ -68,7 +78,7 @@ public class RegistroController {
             try {
                 assistanceResponseService.save(assistanceResponse);
                 
-                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(String.valueOf(code), 300, 300);
+                /*byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(String.valueOf(code), 300, 300);
 		        // Configurar la respuesta HTTP para descargar la imagen
 		        response.setContentType("image/png");
 		        response.setContentLength(qrCodeBytes.length);
@@ -82,7 +92,15 @@ public class RegistroController {
 		        } catch (IOException e) {
 		            // Manejo de errores al escribir la respuesta
 		            e.printStackTrace();
-		        }
+		        }*/
+		        
+		        //ENVIA EL MAIL
+		        String toUser = "gussiciliano@gmail.com";
+		        Map<String, Object> message = new HashMap<>();
+		        message.put("username", "prueba");
+		        message.put("password", "prueba");
+
+		        mailService.sendEmail(toUser, "Prueba de envio", message);
             } catch (Exception e) {
 				// TODO: add errors on view
 			}
