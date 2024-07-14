@@ -25,18 +25,22 @@
   </div>
   <div class="content">
     <p>
-      Bienvenido, nos comunicamos con usted para informarle que ya es parte del
-      <span style="font-weight: bold; font-size: 15px;"> Evento</span>
+      Inscripción correcta, se adjunta QR para mostrar el día de inicio del evento
     </p>
     <br>
     <p>
-      Para comenzar ingresa utilizando las
-      <span style="font-weight: bold; font-size: 15px;">siguientes credenciales</span>:
+      <span style="font-weight: bold; font-size: 15px;">Detalles</span>:
     </p>
     <p>
-      User: <span th:text="${username}"></span>
+      Nombre: <span th:text="${name}"></span>
       <br/>
-      Password: <span th:text="${password}"></span>
+      Apellido: <span th:text="${lastName}"></span>
+      <br/>
+      Evento: <span th:text="${eventName}"></span>
+      <br/>
+      Fecha inicio: <span th:text="${eventStartDate}"></span>
+      <br/>
+      Fecha finalziación: <span th:text="${eventEndDate}"></span>
     </p>
     <br>
     <p>

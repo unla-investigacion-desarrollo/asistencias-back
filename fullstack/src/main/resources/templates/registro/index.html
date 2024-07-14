@@ -5,8 +5,10 @@
 </head>
 <body>
     <h1 th:text="'Registro al Evento: ' + ${eventName}"></h1>
+    <h2 th:text="'Incio: ' + ${eventStartDate}"></h2>
+    <h2 th:text="'Fin: ' + ${eventEndDate}"></h2>
     <form th:action="@{/registro/submit}" method="post" th:object="${assistanceResponse}">
-        <input type="hidden" name="publicFormLink" th:value="${publicFormLink}" />
+        <input type="hidden" name="uniqueCode" th:value="${uniqueCode}" />
         <label for="name">Nombre:</label>
         <input type="text" id="name" name="name" th:field="*{name}" required />
         <br/>

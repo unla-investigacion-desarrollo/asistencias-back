@@ -10,7 +10,7 @@ public interface IEventService {
 
     public Optional<Event> findById(int id);
     
-    public Optional<Event> findByPublicFormLink(String publicFormLink);
+    public Optional<Event> findByUniqueCode(String uniqueCode);
 
     public Event save(Event event);
 

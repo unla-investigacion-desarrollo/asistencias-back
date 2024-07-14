@@ -1,6 +1,7 @@
 package com.unla.eventos.controllers;
 
 import com.unla.eventos.entities.AssistanceResponse;
+import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,16 @@ public class QRController {
     public String procesarQRCode(@PathVariable String qrCode, Model model) {
         AssistanceResponse assistanceResponse = assistanceResponseService.findByQRCode(qrCode);
         if (assistanceResponse != null) {
-            assistanceResponse.setPresent(true);
-            assistanceResponseService.save(assistanceResponse);
-            model.addAttribute("mensaje", "Presencia marcada exitosamente.");
+        	if (!assistanceResponse.isPresent()) {
+        		assistanceResponse.setPresent(true);
+        		assistanceResponseService.save(assistanceResponse);
+        		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
+        	} else {
+                model.addAttribute("mensaje", "Asistencia ya registrada.");
+            }
         } else {
             model.addAttribute("mensaje", "Código QR inválido.");
         }
-        return "qrResultado";
+        return ViewRouteHelper.QR_RESULT;
     }
 }

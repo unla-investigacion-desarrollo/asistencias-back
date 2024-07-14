@@ -7,6 +7,6 @@ import com.unla.eventos.entities.Event;
 
 public interface IEventRepository extends JpaRepository<Event, Integer> {
 	
-	public Optional<Event> findByPublicFormLink(String publicFormLink);
+	public Optional<Event> findByUniqueCode(String uniqueCode);
 	
 }

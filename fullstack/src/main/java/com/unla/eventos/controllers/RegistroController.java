@@ -1,9 +1,11 @@
 package com.unla.eventos.controllers;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
+import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
 import com.unla.eventos.services.implementation.QRCodeService;
 
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -37,84 +39,67 @@ public class RegistroController {
     
     @GetMapping("exito")
     public String exito() {
-        return "exito";
+        return ViewRouteHelper.REGISTRO_EXITO;
     }
     
     @GetMapping("notfound")
     public String notfound() {
-        return "notfound";
+        return ViewRouteHelper.REGISTRO_NOTFOUND;
     }
     
-    @GetMapping("/{publicFormLink}")
-    public String mostrarFormularioRegistro(@PathVariable("publicFormLink") String publicFormLink, Model model) {
-    	Optional<Event> eventOp = assistanceResponseService.findByPublicFormLink(publicFormLink);
+    @GetMapping("/{uniqueCode}")
+    public String mostrarFormularioRegistro(@PathVariable("uniqueCode") String uniqueCode, Model model) {
+    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
-        	model.addAttribute("publicFormLink", publicFormLink);
+    		model.addAttribute("eventStartDate", event.getStartDate());
+    		model.addAttribute("eventEndDate", event.getEndDate());
+        	model.addAttribute("uniqueCode", uniqueCode);
             model.addAttribute("assistanceResponse", new AssistanceResponse());
-            return "registro";	
+            return ViewRouteHelper.REGISTRO_INDEX;	
     	}else {
-    		return "redirect:/registro/notfound";
+    		return  "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
     	}
     }
 
     @PostMapping("/submit")
-    public String procesarRegistro(@RequestParam("publicFormLink") String publicFormLink,
+    public String procesarRegistro(@RequestParam("uniqueCode") String uniqueCode,
                                    @ModelAttribute AssistanceResponse assistanceResponse,
+                                   @ModelAttribute String eventName,
+                                   @ModelAttribute String eventStartDate,
+    							   @ModelAttribute String eventEndDate,
                                    HttpServletResponse response) {
-        
-    	Optional<Event> eventOp = assistanceResponseService.findByPublicFormLink(publicFormLink);
+    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		assistanceResponse.setPresent(false);
             assistanceResponse.setAssistanceCertifySent(false);
-            
-            int code = 123;
-            String qrCode = generateQRCode(code);
-            assistanceResponse.setQRCode(qrCode);
+            assistanceResponse.setQRCode(UUID.randomUUID().toString());
             
             assistanceResponse.setEvent(event);
             try {
                 assistanceResponseService.save(assistanceResponse);
-                
-                /*byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(String.valueOf(code), 300, 300);
-		        // Configurar la respuesta HTTP para descargar la imagen
-		        response.setContentType("image/png");
-		        response.setContentLength(qrCodeBytes.length);
-		        response.setHeader("Content-Disposition", "attachment; filename=\"qrcode.png\"");
-		
-		        // Escribir los bytes del código QR en el flujo de salida de la respuesta
-		        try {
-		            ServletOutputStream outputStream = response.getOutputStream();
-		            outputStream.write(qrCodeBytes);
-		            outputStream.close();
-		        } catch (IOException e) {
-		            // Manejo de errores al escribir la respuesta
-		            e.printStackTrace();
-		        }*/
-		        
-		        //ENVIA EL MAIL
-		        String toUser = "gussiciliano@gmail.com";
+                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
 		        Map<String, Object> message = new HashMap<>();
-		        message.put("username", "prueba");
-		        message.put("password", "prueba");
+		        message.put("name", assistanceResponse.getName());
+		        message.put("lastName", assistanceResponse.getLastName());
+		        message.put("eventName", event.getName());
+		        message.put("eventStartDate", this.formatLocalDateToARGTime(event.getStartDate()));
+		        message.put("eventEndDate", this.formatLocalDateToARGTime(event.getEndDate()));
 
-		        mailService.sendEmail(toUser, "Prueba de envio", message);
+		        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento", message, qrCodeBytes);
             } catch (Exception e) {
 				// TODO: add errors on view
 			}
-            return "redirect:/registro/exito";	
+            return "redirect:/" + ViewRouteHelper.REGISTRO_EXITO;
     	}else {
-    		return "redirect:/registro/notfound";
+    		return "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
     	}
     }
-
-    private String generateQRCode(int code) {
-        try {
-            return qrCodeService.generateQRCodeImage(String.valueOf(code), 300, 300);
-        } catch (Exception e) {
-            return "Error al generar el código QR";
-        }
+    
+    private String formatLocalDateToARGTime(LocalDateTime date) {
+    	return date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear() +
+    			" " + date.getHour() + ":" + date.getMinute();
     }
 }

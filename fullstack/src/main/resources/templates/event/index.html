@@ -19,7 +19,7 @@
             <td th:text="${event.name}"></td>
             <td th:text="${event.startDate}"></td>
             <td th:text="${event.endDate}"></td>
-            <td th:text="${event.publicFormLink}"></td>
+            <td th:text="${event.uniqueCode}"></td>
             <td>
                 <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
                 <a th:href="@{|/events/delete/${event.id}|}" onclick="return confirm('Are you sure?')">Delete</a>

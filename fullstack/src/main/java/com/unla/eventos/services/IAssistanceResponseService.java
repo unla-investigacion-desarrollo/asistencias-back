@@ -7,7 +7,7 @@ import com.unla.eventos.entities.Event;
 
 public interface IAssistanceResponseService {
 	
-	public Optional<Event> findByPublicFormLink(String code);
+	public Optional<Event> findByUniqueCode(String uniqueCode);
 	
 	public AssistanceResponse findByQRCode(String QRCode);
 	
