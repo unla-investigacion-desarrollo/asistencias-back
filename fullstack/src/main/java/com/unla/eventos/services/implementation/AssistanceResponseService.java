@@ -20,8 +20,8 @@ public class AssistanceResponseService implements IAssistanceResponseService {
     @Autowired
     private IEventService eventService;
 
-    public Optional<Event> findByPublicFormLink(String code) {
-        return eventService.findByPublicFormLink(code);
+    public Optional<Event> findByUniqueCode(String uniqueCode) {
+        return eventService.findByUniqueCode(uniqueCode);
     }
     
 	public AssistanceResponse findByQRCode(String QRCode) {

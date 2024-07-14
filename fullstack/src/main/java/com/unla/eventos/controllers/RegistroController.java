@@ -1,8 +1,11 @@
 package com.unla.eventos.controllers;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,15 +47,15 @@ public class RegistroController {
         return ViewRouteHelper.REGISTRO_NOTFOUND;
     }
     
-    @GetMapping("/{publicFormLink}")
-    public String mostrarFormularioRegistro(@PathVariable("publicFormLink") String publicFormLink, Model model) {
-    	Optional<Event> eventOp = assistanceResponseService.findByPublicFormLink(publicFormLink);
+    @GetMapping("/{uniqueCode}")
+    public String mostrarFormularioRegistro(@PathVariable("uniqueCode") String uniqueCode, Model model) {
+    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
     		model.addAttribute("eventStartDate", event.getStartDate());
     		model.addAttribute("eventEndDate", event.getEndDate());
-        	model.addAttribute("publicFormLink", publicFormLink);
+        	model.addAttribute("uniqueCode", uniqueCode);
             model.addAttribute("assistanceResponse", new AssistanceResponse());
             return ViewRouteHelper.REGISTRO_INDEX;	
     	}else {
@@ -61,34 +64,31 @@ public class RegistroController {
     }
 
     @PostMapping("/submit")
-    public String procesarRegistro(@RequestParam("publicFormLink") String publicFormLink,
+    public String procesarRegistro(@RequestParam("uniqueCode") String uniqueCode,
                                    @ModelAttribute AssistanceResponse assistanceResponse,
                                    @ModelAttribute String eventName,
                                    @ModelAttribute String eventStartDate,
     							   @ModelAttribute String eventEndDate,
                                    HttpServletResponse response) {
-    	Optional<Event> eventOp = assistanceResponseService.findByPublicFormLink(publicFormLink);
+    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		assistanceResponse.setPresent(false);
             assistanceResponse.setAssistanceCertifySent(false);
-            
-            int code = 123;
-            String qrCode = generateQRCode(code);
-            assistanceResponse.setQRCode(qrCode);
+            assistanceResponse.setQRCode(UUID.randomUUID().toString());
             
             assistanceResponse.setEvent(event);
             try {
                 assistanceResponseService.save(assistanceResponse);
-                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(String.valueOf(code), 300, 300);
+                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
 		        Map<String, Object> message = new HashMap<>();
-		        message.put("name", assistanceResponse);
-		        message.put("lastName", assistanceResponse);
+		        message.put("name", assistanceResponse.getName());
+		        message.put("lastName", assistanceResponse.getLastName());
 		        message.put("eventName", event.getName());
-		        message.put("eventStartDate", event.getStartDate());
-		        message.put("eventEndDate", event.getEndDate());
+		        message.put("eventStartDate", this.formatLocalDateToARGTime(event.getStartDate()));
+		        message.put("eventEndDate", this.formatLocalDateToARGTime(event.getEndDate()));
 
-		        mailService.sendEmail(assistanceResponse.getEmail(), "Prueba de envio", message, qrCodeBytes);
+		        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento", message, qrCodeBytes);
             } catch (Exception e) {
 				// TODO: add errors on view
 			}
@@ -97,12 +97,9 @@ public class RegistroController {
     		return "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
     	}
     }
-
-    private String generateQRCode(int code) {
-        try {
-            return qrCodeService.generateQRCodeImage(String.valueOf(code), 300, 300);
-        } catch (Exception e) {
-            return "Error al generar el código QR";
-        }
+    
+    private String formatLocalDateToARGTime(LocalDateTime date) {
+    	return date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear() +
+    			" " + date.getHour() + ":" + date.getMinute();
     }
 }

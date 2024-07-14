@@ -19,6 +19,9 @@ public class ViewRouteHelper {
 	public final static String REGISTRO_INDEX = "registro/index";
 	public final static String REGISTRO_NOTFOUND = "registro/notfound";
 	
+	//QR
+	public final static String QR_RESULT = "qr/result";
+	
 	/**** Redirects ****/
 	public final static String ROUTE = "/index";
 	public final static String EVENTS_CRUD = "redirect:/events";
@@ -27,4 +30,7 @@ public class ViewRouteHelper {
 	public final static String TEMPLATE_REGISTER_USER = "mails/email_register_user";
 	public final static String EMAIL_SENDER = "test.unla.labs@gmail.com";
 	public final static String CODE = "cvlbdrttfgbhovpy";
+	
+	//Public QR link service
+	public final static String PUBLIC_QR_LINK_SERVER = "localhost:8080/qr/";
 }

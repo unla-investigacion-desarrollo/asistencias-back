@@ -34,7 +34,7 @@ public class Event {
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime endDate;
 
-    private String publicFormLink;
+    private String uniqueCode;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -25,15 +25,15 @@ public class EventService implements IEventService {
         return eventRepository.findById(id);
     }
     
-    public Optional<Event> findByPublicFormLink(String publicFormLink) {
-        return eventRepository.findByPublicFormLink(publicFormLink);
+    public Optional<Event> findByUniqueCode(String uniqueCode) {
+        return eventRepository.findByUniqueCode(uniqueCode);
     }
 
     public Event save(Event event) {
-    	Event oldEvent = eventRepository.findById(event.getId()).get();
-    	event.setCreatedAt(oldEvent.getCreatedAt());
-    	if (event.getPublicFormLink() == null || event.getPublicFormLink().isEmpty()) {
-            event.setPublicFormLink(generateUniqueCode());
+    	Optional<Event> oldEvent = eventRepository.findById(event.getId());
+    	if(oldEvent.isPresent()) event.setCreatedAt(oldEvent.get().getCreatedAt());
+    	if (event.getUniqueCode() == null || event.getUniqueCode().isEmpty()) {
+            event.setUniqueCode(generateUniqueCode());
         }
         return eventRepository.save(event);
     }
