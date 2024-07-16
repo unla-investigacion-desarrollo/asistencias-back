@@ -1,6 +1,5 @@
 package com.unla.eventos.controllers;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
+import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
@@ -47,14 +47,19 @@ public class RegistroController {
         return ViewRouteHelper.REGISTRO_NOTFOUND;
     }
     
+    @GetMapping("mail_in_use")
+    public String mailInUse() {
+        return ViewRouteHelper.REGISTRO_MAIL_IN_USE;
+    }
+    
     @GetMapping("/{uniqueCode}")
     public String mostrarFormularioRegistro(@PathVariable("uniqueCode") String uniqueCode, Model model) {
     	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
-    		model.addAttribute("eventStartDate", event.getStartDate());
-    		model.addAttribute("eventEndDate", event.getEndDate());
+    		model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
+    		model.addAttribute("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
         	model.addAttribute("uniqueCode", uniqueCode);
             model.addAttribute("assistanceResponse", new AssistanceResponse());
             return ViewRouteHelper.REGISTRO_INDEX;	
@@ -72,34 +77,34 @@ public class RegistroController {
                                    HttpServletResponse response) {
     	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
-    		Event event = eventOp.get();
-    		assistanceResponse.setPresent(false);
-            assistanceResponse.setAssistanceCertifySent(false);
-            assistanceResponse.setQRCode(UUID.randomUUID().toString());
-            
-            assistanceResponse.setEvent(event);
-            try {
-                assistanceResponseService.save(assistanceResponse);
-                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
-		        Map<String, Object> message = new HashMap<>();
-		        message.put("name", assistanceResponse.getName());
-		        message.put("lastName", assistanceResponse.getLastName());
-		        message.put("eventName", event.getName());
-		        message.put("eventStartDate", this.formatLocalDateToARGTime(event.getStartDate()));
-		        message.put("eventEndDate", this.formatLocalDateToARGTime(event.getEndDate()));
-
-		        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento", message, qrCodeBytes);
-            } catch (Exception e) {
-				// TODO: add errors on view
-			}
+    		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmail(assistanceResponse.getEmail());
+    		if(!preExisting.isPresent()) {
+	    		Event event = eventOp.get();
+	    		assistanceResponse.setPresent(false);
+	            assistanceResponse.setAssistanceCertifySent(false);
+	            assistanceResponse.setQRCode(UUID.randomUUID().toString());
+	            
+	            assistanceResponse.setEvent(event);
+	            try {
+	                assistanceResponseService.save(assistanceResponse);
+	                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
+			        Map<String, Object> message = new HashMap<>();
+			        message.put("name", assistanceResponse.getName());
+			        message.put("lastName", assistanceResponse.getLastName());
+			        message.put("eventName", event.getName());
+			        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
+			        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
+	
+			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento", message, qrCodeBytes);
+	            } catch (Exception e) {
+					// TODO: add errors on view
+				}
+    		} else {
+    			return "redirect:/" + ViewRouteHelper.REGISTRO_MAIL_IN_USE;
+    		}
             return "redirect:/" + ViewRouteHelper.REGISTRO_EXITO;
     	}else {
     		return "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
     	}
-    }
-    
-    private String formatLocalDateToARGTime(LocalDateTime date) {
-    	return date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear() +
-    			" " + date.getHour() + ":" + date.getMinute();
     }
 }

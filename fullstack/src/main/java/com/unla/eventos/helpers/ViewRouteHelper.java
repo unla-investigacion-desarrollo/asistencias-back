@@ -1,35 +1,26 @@
 package com.unla.eventos.helpers;
 
 public class ViewRouteHelper {
-	/**** Views ****/
 	//HOME
 	public final static String INDEX = "home/index";
-	public final static String HELLO = "home/hello";
 	
 	//USER
 	public final static String USER_LOGIN = "user/login";
-	public final static String USER_LOGOUT = "user/logout";
 	
 	//EVENT
 	public final static String EVENT_INDEX = "event/index";
 	public final static String EVENT_SAVE = "event/save";
+	public final static String REDIRECT_EVENTS_CRUD = "redirect:/events";
 	
 	//REGISTRO
 	public final static String REGISTRO_EXITO = "registro/exito";
 	public final static String REGISTRO_INDEX = "registro/index";
 	public final static String REGISTRO_NOTFOUND = "registro/notfound";
+	public final static String REGISTRO_MAIL_IN_USE = "registro/mail_in_use";
 	
 	//QR
 	public final static String QR_RESULT = "qr/result";
-	
-	/**** Redirects ****/
-	public final static String ROUTE = "/index";
-	public final static String EVENTS_CRUD = "redirect:/events";
-	
-	//MAILS
-	public final static String TEMPLATE_REGISTER_USER = "mails/email_register_user";
-	public final static String EMAIL_SENDER = "test.unla.labs@gmail.com";
-	public final static String CODE = "cvlbdrttfgbhovpy";
+	public final static String QR_ASSISTANCE = "qr/assitance";
 	
 	//Public QR link service
 	public final static String PUBLIC_QR_LINK_SERVER = "localhost:8080/qr/";

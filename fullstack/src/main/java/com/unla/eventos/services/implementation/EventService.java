@@ -31,10 +31,13 @@ public class EventService implements IEventService {
 
     public Event save(Event event) {
     	Optional<Event> oldEvent = eventRepository.findById(event.getId());
-    	if(oldEvent.isPresent()) event.setCreatedAt(oldEvent.get().getCreatedAt());
-    	if (event.getUniqueCode() == null || event.getUniqueCode().isEmpty()) {
-            event.setUniqueCode(generateUniqueCode());
-        }
+    	if(oldEvent.isPresent()) {
+    		event.setCreatedAt(oldEvent.get().getCreatedAt());
+    		event.setUniqueCode(oldEvent.get().getUniqueCode());
+    	}
+    	else {
+    		event.setUniqueCode(generateUniqueCode());
+    	}
         return eventRepository.save(event);
     }
 

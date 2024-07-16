@@ -12,13 +12,6 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-    <style>
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-            display: none;
-        }
-    </style>
 </head>
 <body style="background-color:#7C1331; background-image:none" class="bg-gradient-primary">
     <div class="container">
@@ -36,29 +29,9 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-	                                    <h1 class="h4 text-gray-900 mb-4" th:text="'Registro al Evento: ' + ${eventName}"></h1>
-									    <h1 class="h4 text-gray-900 mb-4" th:text="'Incio: ' + ${eventStartDate}"></h1>
-									    <h1 class="h4 text-gray-900 mb-4" th:text="'Fin: ' + ${eventEndDate}"></h1>
-								    </div>
-								    <form class="user" th:action="@{/registro/submit}" method="post" th:object="${assistanceResponse}" onsubmit="showLoading()">
-								        <input type="hidden" name="uniqueCode" th:value="${uniqueCode}" />
-								        <label for="name">Nombre:</label>
-								        <input type="text" id="name" name="name" th:field="*{name}" required />
-								        <br/>
-								        <label for="lastName">Apellido:</label>
-								        <input type="text" id="lastName" name="lastName" th:field="*{lastName}" required />
-								        <br/>
-								        <label for="documentNumber">Nro Documento:</label>
-								        <input type="text" id="documentNumber" name="documentNumber" th:field="*{documentNumber}" required />
-								        <br/>
-								        <label for="email">Email:</label>
-								        <input type="email" id="email" name="email" th:field="*{email}" required />
-								        <br/>
-								        <button type="submit" id="submitButton">Registrarse</button>
-								        <div class="spinner-border text-primary" role="status" id="loadingSpinner">
-                                            <span class="sr-only">Procesando...</span>
-                                        </div>
-								    </form>
+                                        <h1>No se puede procesar el QR</h1>
+                                        <h1>Por favor muestre el QR a un asistente el día del evento</h1>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,11 +44,5 @@
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
-    <script>
-        function showLoading() {
-            document.getElementById('submitButton').disabled = true;
-            document.getElementById('loadingSpinner').style.display = 'block';
-        }
-    </script>
 </body>
 </html>

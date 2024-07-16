@@ -11,5 +11,7 @@ public interface IAssistanceResponseService {
 	
 	public AssistanceResponse findByQRCode(String QRCode);
 	
+	public Optional<AssistanceResponse> findByEmail(String email);
+	
     public AssistanceResponse save(AssistanceResponse assistanceResponse);
 }

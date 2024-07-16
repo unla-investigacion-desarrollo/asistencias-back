@@ -20,15 +20,8 @@ public class UserController {
 		return ViewRouteHelper.USER_LOGIN;
 	}
 
-	@GetMapping("/logout")
-	public String logout(Model model) {
-		return ViewRouteHelper.USER_LOGOUT;
-	}
-
 	@GetMapping("/loginsuccess")
 	public String loginCheck() {
-		//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		//user.getUserRoles()
-		return "redirect:/user";
+		return ViewRouteHelper.INDEX;
 	}
 }
