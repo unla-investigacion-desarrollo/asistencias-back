@@ -21,7 +21,4 @@ public class ViewRouteHelper {
 	//QR
 	public final static String QR_RESULT = "qr/result";
 	public final static String QR_ASSISTANCE = "qr/assitance";
-	
-	//Public QR link service
-	public final static String PUBLIC_QR_LINK_SERVER = "localhost:8080/qr/";
 }

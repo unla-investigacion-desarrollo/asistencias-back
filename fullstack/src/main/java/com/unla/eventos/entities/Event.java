@@ -6,6 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.unla.eventos.helpers.FunctionsHelper;
+import com.unla.eventos.helpers.PublicLinksHelper;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,4 +44,16 @@ public class Event {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    
+    public String startDateFormatted() {
+    	return FunctionsHelper.formatLocalDateToARGTime(getStartDate());
+    }
+    
+    public String endDateFormatted() {
+    	return FunctionsHelper.formatLocalDateToARGTime(getEndDate());
+    }
+    
+    public String publicLink() {
+    	return PublicLinksHelper.PUBLIC_REGISTER_LINK_SERVER + getUniqueCode();
+    }
 }

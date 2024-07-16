@@ -62,6 +62,7 @@
 								            <th>Start Date</th>
 								            <th>End Date</th>
 								            <th>Code</th>
+								            <th>Public link</th>
 								            <th></th>
 								            <th></th>
 								        </tr>
@@ -70,9 +71,12 @@
                                         <tr th:each="event : ${events}">
 								            <td th:text="${event.id}"></td>
 								            <td th:text="${event.name}"></td>
-								            <td th:text="${event.startDate}"></td>
-								            <td th:text="${event.endDate}"></td>
+								            <td th:text="${event.startDateFormatted}"></td>
+								            <td th:text="${event.endDateFormatted}"></td>
 								            <td th:text="${event.uniqueCode}"></td>
+								            <td>
+											    <a th:href="${event.publicLink}" target="_blank">Link</a>
+											</td>
 								            <td>
 								                <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
 								            </td>
