@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar Usuario</title>
+</head>
+<body>
+    <h1>Editar Usuario</h1>
+    <form th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+        <div>
+            <label for="username">Nombre de Usuario:</label>
+            <input type="text" id="username" th:field="*{username}" required />
+        </div>
+        <div>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" th:field="*{password}" required />
+        </div>
+        <div>
+            <label for="enabled">Activo:</label>
+            <input type="checkbox" id="enabled" th:field="*{enabled}" />
+        </div>
+        <div>
+            <button type="submit">Actualizar</button>
+        </div>
+    </form>
+    <a th:href="@{/admin}">Volver a la Lista de Usuarios</a>
+</body>
+</html>

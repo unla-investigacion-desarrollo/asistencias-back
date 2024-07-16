@@ -3,6 +3,7 @@ package com.unla.eventos.services.implementation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -15,9 +16,10 @@ import org.springframework.stereotype.Service;
 
 import com.unla.eventos.entities.UserRole;
 import com.unla.eventos.repositories.IUserRepository;
+import com.unla.eventos.services.IUserService;
 
 @Service("userService")
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, IUserService {
 
 	private IUserRepository userRepository;
 
@@ -44,4 +46,24 @@ public class UserService implements UserDetailsService {
 		}
 		return new ArrayList<>(grantedAuthorities);
 	}
+
+	@Override
+	public List<com.unla.eventos.entities.User> findAll() {
+        return userRepository.findAll();
+    }
+
+	@Override
+    public Optional<com.unla.eventos.entities.User> findById(int id) {
+        return userRepository.findById(id);
+    }
+
+	@Override
+    public com.unla.eventos.entities.User save(com.unla.eventos.entities.User user) {
+        return userRepository.save(user);
+    }
+
+	@Override
+    public void deleteById(int id) {
+        userRepository.deleteById(id);
+    }
 }

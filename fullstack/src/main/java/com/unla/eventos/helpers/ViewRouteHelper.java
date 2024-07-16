@@ -5,7 +5,7 @@ public class ViewRouteHelper {
 	public final static String INDEX = "home/index";
 	
 	//USER
-	public final static String USER_LOGIN = "user/login";
+	public final static String USER_LOGIN = "access/login";
 	
 	//EVENT
 	public final static String EVENT_INDEX = "event/index";

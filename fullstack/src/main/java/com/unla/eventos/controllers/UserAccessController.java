@@ -9,7 +9,7 @@ import com.unla.eventos.helpers.ViewRouteHelper;
 
 
 @Controller
-public class UserController {
+public class UserAccessController {
 
 	@GetMapping("/login")
 	public String login(Model model,
