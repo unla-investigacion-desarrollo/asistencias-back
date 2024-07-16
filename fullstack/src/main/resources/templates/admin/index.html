@@ -7,7 +7,6 @@
     <meta name="description" content="">
     <meta name="author" content="UNLa labs">
     <title>Eventos UNLa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -50,27 +49,40 @@
 					</form>
                 </nav>
                 <div class="container-fluid">
-                    <h1>Crear Usuario</h1>
-				    <form th:action="@{/admin/create}" th:object="${user}" method="post">
-				        <div>
-				            <label for="username">Nombre de Usuario:</label>
-				            <input type="text" id="username" th:field="*{username}" required />
-				        </div>
-				        <div>
-				            <label for="password">Contraseña:</label>
-				            <input type="password" id="password" th:field="*{password}" required />
-				        </div>
-				        <div>
-				            <label for="enabled">Activo:</label>
-				            <input type="checkbox" id="enabled" th:field="*{enabled}" />
-				        </div>
-				        <div>
-				            <button type="submit">Crear</button>
-				        </div>
-				    </form>
-				    <a th:href="@{/admin}">Volver a la Lista de Usuarios</a>
-	            </div>
-	         </div>
+                    <h1 class="h3 mb-2 text-gray-800">Usuarios</h1>
+    				<a th:href="@{/admin/create}">Crear Nuevo Usuario</a>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+								            <th>Number</th>
+								            <th>Nombre de Usuario</th>
+								            <th>Estado</th>
+								            <th></th>
+								            <th></th>
+								        </tr>
+                                    </thead>
+                                    <tbody>
+										<tr th:each="user : ${users}">
+								            <td th:text="${user.id}">1</td>
+								            <td th:text="${user.username}">Nombre de Usuario</td>
+								            <td th:text="${user.enabled ? 'Activo' : 'Inactivo'}">Estado</td>
+								            <td>
+								                <a th:href="@{/admin/edit/{id}(id=${user.id})}">Editar</a>
+								            </td>
+											<td>
+								                <a th:href="@{/admin/delete/{id}(id=${user.id})}" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
+								            </td>
+								        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -87,5 +99,8 @@
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/js/demo/datatables-demo.js"></script>
 </body>
 </html>

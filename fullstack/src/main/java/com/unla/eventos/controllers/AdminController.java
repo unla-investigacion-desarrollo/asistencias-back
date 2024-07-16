@@ -22,7 +22,7 @@ public class AdminController {
     @GetMapping
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "admin/list";
+        return "admin/index";
     }
 
     @GetMapping("/create")
@@ -35,7 +35,11 @@ public class AdminController {
         if (result.hasErrors()) {
             return "admin/create";
         }
-        userService.save(user);
+        try {
+            userService.save(user);
+		} catch (Exception e) {
+			//TODO: Add errors on view
+		}
         return "redirect:/admin";
     }
 
@@ -56,13 +60,21 @@ public class AdminController {
             user.setId(id);
             return "admin/edit";
         }
-        userService.save(user);
+        try {
+            userService.save(user);
+		} catch (Exception e) {
+			//TODO: Add errors on view
+		}
         return "redirect:/admin";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") int id, Model model) {
-        userService.deleteById(id);
+    	try {
+            userService.deleteById(id);
+		} catch (Exception e) {
+			//TODO: Add errors on view
+		}
         return "redirect:/admin";
     }
 }
