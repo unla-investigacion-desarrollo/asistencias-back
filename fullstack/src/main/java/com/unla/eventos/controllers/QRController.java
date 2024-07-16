@@ -27,20 +27,19 @@ public class QRController {
         
     	AssistanceResponse assistanceResponse = assistanceResponseService.findByQRCode(qrCode);
         if (assistanceResponse != null) {
-        	System.out.println(assistanceResponse.getEvent().getStartDate());
-        	System.out.println(LocalDateTime.now());
         	if (LocalDateTime.now().isBefore(assistanceResponse.getEvent().getStartDate())) {
         		model.addAttribute("mensaje",
         				"Evento no iniciado. Vuelva a leer el QR después del: " +
         				FunctionsHelper.formatLocalDateToARGTime(assistanceResponse.getEvent().getStartDate()));
-        	}
-        	if (!assistanceResponse.isPresent()) {
-        		assistanceResponse.setPresent(true);
-        		assistanceResponseService.save(assistanceResponse);
-        		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
         	} else {
-                model.addAttribute("mensaje", "Asistencia ya registrada.");
-            }
+        		if (!assistanceResponse.isPresent()) {
+            		assistanceResponse.setPresent(true);
+            		assistanceResponseService.save(assistanceResponse);
+            		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
+            	} else {
+                    model.addAttribute("mensaje", "Asistencia ya registrada.");
+                }
+        	}
         } else {
             model.addAttribute("mensaje", "Código QR inválido.");
         }
