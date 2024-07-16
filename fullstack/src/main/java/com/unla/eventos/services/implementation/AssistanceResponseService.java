@@ -27,6 +27,10 @@ public class AssistanceResponseService implements IAssistanceResponseService {
 	public AssistanceResponse findByQRCode(String QRCode) {
 		return assistanceResponseRepository.findByQRCode(QRCode);
 	}
+	
+	public Optional<AssistanceResponse> findByEmail(String email) {
+		return assistanceResponseRepository.findByEmail(email);
+	}
     
     public AssistanceResponse save(AssistanceResponse assistanceResponse) {
         return assistanceResponseRepository.save(assistanceResponse);

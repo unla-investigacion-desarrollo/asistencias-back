@@ -39,10 +39,14 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Nombre de usuario!</span>
+                                <span th:text="${username}" class="mr-2 d-none d-lg-inline text-gray-600 small" />
                             </a>
                         </li>
                     </ul>
+                    <form th:action="@{/logout}" method="post">
+						<input class="dropdown-item" style="cursor: pointer"
+							type="submit" value="Salir" />
+					</form>
                 </nav>
                 <div class="container-fluid">
                     <h1 class="h3 mb-2 text-gray-800">Eventos</h1>
@@ -58,6 +62,7 @@
 								            <th>Start Date</th>
 								            <th>End Date</th>
 								            <th>Code</th>
+								            <th>Public link</th>
 								            <th></th>
 								            <th></th>
 								        </tr>
@@ -66,9 +71,12 @@
                                         <tr th:each="event : ${events}">
 								            <td th:text="${event.id}"></td>
 								            <td th:text="${event.name}"></td>
-								            <td th:text="${event.startDate}"></td>
-								            <td th:text="${event.endDate}"></td>
+								            <td th:text="${event.startDateFormatted}"></td>
+								            <td th:text="${event.endDateFormatted}"></td>
 								            <td th:text="${event.uniqueCode}"></td>
+								            <td>
+											    <a th:href="${event.publicLink}" target="_blank">Link</a>
+											</td>
 								            <td>
 								                <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
 								            </td>

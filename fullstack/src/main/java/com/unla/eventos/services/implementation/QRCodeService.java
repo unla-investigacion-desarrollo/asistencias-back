@@ -6,7 +6,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.helpers.PublicLinksHelper;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class QRCodeService {
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        String qrText = ViewRouteHelper.PUBLIC_QR_LINK_SERVER + code;
+        String qrText = PublicLinksHelper.PUBLIC_QR_LINK_SERVER + code;
         BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, width, height, hints);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

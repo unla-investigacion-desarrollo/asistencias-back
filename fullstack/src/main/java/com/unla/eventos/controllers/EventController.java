@@ -3,6 +3,8 @@ package com.unla.eventos.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,24 +23,27 @@ public class EventController {
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("events", eventService.findAll());
+		model.addAttribute("username", getLoggedUser().getUsername());
         return ViewRouteHelper.EVENT_INDEX;
     }
 
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("event", new Event());
+		model.addAttribute("username", getLoggedUser().getUsername());
         return ViewRouteHelper.EVENT_SAVE;
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable int id, Model model) {
+		model.addAttribute("username", getLoggedUser().getUsername());
         Optional<Event> event = eventService.findById(id);
         if (event.isPresent()) {
             Event existingEvent = event.get();
             model.addAttribute("event", existingEvent);
             return ViewRouteHelper.EVENT_SAVE;
         } else {
-            return ViewRouteHelper.EVENTS_CRUD;
+            return ViewRouteHelper.REDIRECT_EVENTS_CRUD;
         }
     }
 
@@ -49,7 +54,7 @@ public class EventController {
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}
-        return ViewRouteHelper.EVENTS_CRUD;
+        return ViewRouteHelper.REDIRECT_EVENTS_CRUD;
     }
 
     @GetMapping("/delete/{id}")
@@ -59,6 +64,10 @@ public class EventController {
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}
-    	return ViewRouteHelper.EVENTS_CRUD;
+    	return ViewRouteHelper.REDIRECT_EVENTS_CRUD;
+    }
+    
+    private User getLoggedUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

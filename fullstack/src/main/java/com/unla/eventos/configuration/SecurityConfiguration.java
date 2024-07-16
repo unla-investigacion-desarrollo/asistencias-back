@@ -33,7 +33,9 @@ public class SecurityConfiguration {
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> {
-					auth.requestMatchers("/css/*", "/images/*", "/js/*", "/scss/*", "/vendor/*").permitAll();
+					auth.requestMatchers("/css/*", "/images/*", "/js/*", "/scss/*",
+										"/vendor/*", "/vendor/jquery-easing/*", "/vendor/bootstrap/js/*",
+										"/vendor/jquery/*", "/vendor/fontawesome-free/css/*").permitAll();
 					auth.requestMatchers("/registro/*").permitAll();
 					auth.requestMatchers("/qr/*").permitAll();
 					auth.anyRequest().authenticated();
@@ -48,7 +50,7 @@ public class SecurityConfiguration {
 				})
 				.logout(logout -> {
 					logout.logoutUrl("/logout");
-					logout.logoutSuccessUrl("/login");
+					logout.logoutSuccessUrl("/");
 					logout.permitAll();
 				})
 				.build();

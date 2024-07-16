@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.helpers.MailConfigHelper;
 import com.unla.eventos.services.IMailService;
 
 @Service("emailService")
@@ -35,14 +35,14 @@ public class MailService implements IMailService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try{
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(ViewRouteHelper.EMAIL_SENDER);
+            mimeMessageHelper.setFrom(MailConfigHelper.EMAIL_SENDER);
             mimeMessageHelper.setTo(toUser);
             mimeMessageHelper.setSubject(subject);
 
             Context context = new Context();
             context.setVariables(message);
 
-            String htmlContent = templateEngine.process(ViewRouteHelper.TEMPLATE_REGISTER_USER, context);
+            String htmlContent = templateEngine.process(MailConfigHelper.TEMPLATE_REGISTER_USER, context);
             mimeMessageHelper.setText(htmlContent,true);
 
             ClassPathResource resource = new ClassPathResource("/static/images/logo.png");

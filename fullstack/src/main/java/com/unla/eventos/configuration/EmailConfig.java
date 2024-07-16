@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.helpers.MailConfigHelper;
 
 @Configuration
 public class EmailConfig {
@@ -16,8 +16,8 @@ public class EmailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername(ViewRouteHelper.EMAIL_SENDER);
-        mailSender.setPassword(ViewRouteHelper.CODE);
+        mailSender.setUsername(MailConfigHelper.EMAIL_SENDER);
+        mailSender.setPassword(MailConfigHelper.CODE);
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
