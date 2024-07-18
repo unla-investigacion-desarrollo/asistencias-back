@@ -77,7 +77,7 @@ public class RegistroController {
                                    HttpServletResponse response) {
     	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
-    		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmail(assistanceResponse.getEmail());
+    		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmailAndEventId(assistanceResponse.getEmail(), eventOp.get().getId());
     		if(!preExisting.isPresent()) {
 	    		Event event = eventOp.get();
 	    		assistanceResponse.setPresent(false);

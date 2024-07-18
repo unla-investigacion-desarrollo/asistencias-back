@@ -10,6 +10,9 @@ public class ViewRouteHelper {
 	public final static String ADMIN_EDIT = "admin/edit";
 	public final static String REDIRECT_ADMIN_USERS_CRUD = "redirect:/admin";
 	
+	//ASSISTANCE_RESPONSE
+	public final static String ASSISTANCE_RESPONSE_INDEX = "assistance_response/index";
+	
 	//USER
 	public final static String USER_LOGIN = "access/login";
 	
