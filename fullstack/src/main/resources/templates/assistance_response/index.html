@@ -78,7 +78,12 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="/events">Back to Events</a>
+                            <div>
+                            	<a th:href="@{|/responses/export/${eventId}|}">Export to Excel</a>
+                            </div>
+                            <div>
+                            	<a href="/events">Back to Events</a>
+                            </div>
                         </div>
                     </div>
                 </div>
