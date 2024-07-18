@@ -1,5 +1,6 @@
 package com.unla.eventos.services.implementation;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,15 @@ public class AssistanceResponseService implements IAssistanceResponseService {
 		return assistanceResponseRepository.findByQRCode(QRCode);
 	}
 	
-	public Optional<AssistanceResponse> findByEmail(String email) {
-		return assistanceResponseRepository.findByEmail(email);
+	public Optional<AssistanceResponse> findByEmailAndEventId(String email, int eventId) {
+		return assistanceResponseRepository.findByEmailAndEventId(email, eventId);
 	}
     
     public AssistanceResponse save(AssistanceResponse assistanceResponse) {
         return assistanceResponseRepository.save(assistanceResponse);
+    }
+    
+    public List<AssistanceResponse> findByEventId(int eventId) {
+        return assistanceResponseRepository.findByEventId(eventId);
     }
 }

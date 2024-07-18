@@ -1,5 +1,6 @@
 package com.unla.eventos.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.unla.eventos.entities.AssistanceResponse;
@@ -11,7 +12,9 @@ public interface IAssistanceResponseService {
 	
 	public AssistanceResponse findByQRCode(String QRCode);
 	
-	public Optional<AssistanceResponse> findByEmail(String email);
+	public Optional<AssistanceResponse> findByEmailAndEventId(String email, int eventId);
 	
     public AssistanceResponse save(AssistanceResponse assistanceResponse);
+    
+    public List<AssistanceResponse> findByEventId(int eventId);
 }

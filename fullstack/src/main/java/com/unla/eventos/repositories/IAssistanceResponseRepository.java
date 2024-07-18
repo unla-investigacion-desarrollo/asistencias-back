@@ -1,5 +1,6 @@
 package com.unla.eventos.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,7 @@ public interface IAssistanceResponseRepository extends JpaRepository<AssistanceR
 	@Query("SELECT ar FROM AssistanceResponse ar JOIN FETCH ar.event WHERE ar.QRCode = :QRCode")
 	public AssistanceResponse findByQRCode(String QRCode);
 	
-	public Optional<AssistanceResponse> findByEmail(String email);
+	public Optional<AssistanceResponse> findByEmailAndEventId(String email, int eventId);
+	
+	public List<AssistanceResponse> findByEventId(int eventId);
 }
