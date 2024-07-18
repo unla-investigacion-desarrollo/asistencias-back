@@ -59,7 +59,6 @@
                                         <tr>
 								            <th>Number</th>
 								            <th>Nombre de Usuario</th>
-								            <th>Estado</th>
 								            <th></th>
 								            <th></th>
 								        </tr>
@@ -68,7 +67,6 @@
 										<tr th:each="user : ${users}">
 								            <td th:text="${user.id}">1</td>
 								            <td th:text="${user.username}">Nombre de Usuario</td>
-								            <td th:text="${user.enabled ? 'Activo' : 'Inactivo'}">Estado</td>
 								            <td>
 								                <a th:href="@{/admin/edit/{id}(id=${user.id})}">Editar</a>
 								            </td>

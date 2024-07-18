@@ -1,18 +1,21 @@
 package com.unla.eventos.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.unla.eventos.entities.User;
+import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IUserService;
 
 import jakarta.validation.Valid;
 import java.util.Optional;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -22,50 +25,54 @@ public class AdminController {
     @GetMapping
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "admin/index";
+        return ViewRouteHelper.ADMIN_INDEX;
     }
 
     @GetMapping("/create")
-    public String showCreateForm(User user) {
-        return "admin/create";
+    public String showCreateForm(User user, Model model) {
+        model.addAttribute("roles", userService.getAllRoles());
+        return ViewRouteHelper.ADMIN_CREATE;
     }
 
     @PostMapping("/create")
-    public String createUser(@Valid User user, BindingResult result, Model model) {
+    public String createUser(@Valid User user, BindingResult result, @RequestParam String role, Model model) {
         if (result.hasErrors()) {
-            return "admin/create";
+        	model.addAttribute("roles", userService.getAllRoles());
+            return ViewRouteHelper.ADMIN_CREATE;
         }
         try {
-            userService.save(user);
+            userService.save(user, role);
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}
-        return "redirect:/admin";
+        return ViewRouteHelper.REDIRECT_ADMIN_USERS_CRUD;
     }
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") int id, Model model) {
         Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
+        	model.addAttribute("roles", userService.getAllRoles());
             model.addAttribute("user", user.get());
-            return "admin/edit";
+            return ViewRouteHelper.ADMIN_EDIT;
         } else {
-            return "redirect:/admin";
+            return ViewRouteHelper.REDIRECT_ADMIN_USERS_CRUD;
         }
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") int id, @Valid User user, BindingResult result, Model model) {
+    public String updateUser(@PathVariable("id") int id, @Valid User user, BindingResult result, @RequestParam String role, Model model) {
         if (result.hasErrors()) {
             user.setId(id);
-            return "admin/edit";
+        	model.addAttribute("roles", userService.getAllRoles());
+            return ViewRouteHelper.ADMIN_EDIT;
         }
         try {
-            userService.save(user);
+            userService.save(user, role);
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}
-        return "redirect:/admin";
+        return ViewRouteHelper.REDIRECT_ADMIN_USERS_CRUD;
     }
 
     @GetMapping("/delete/{id}")
@@ -75,6 +82,6 @@ public class AdminController {
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}
-        return "redirect:/admin";
+        return ViewRouteHelper.REDIRECT_ADMIN_USERS_CRUD;
     }
 }

@@ -10,7 +10,9 @@ public interface IUserService {
 
     public Optional<User> findById(int id);
 
-    public User save(User user);
+    public User save(User user, String role);
 
     public void deleteById(int id);
+    
+    public List<String> getAllRoles();
 }
