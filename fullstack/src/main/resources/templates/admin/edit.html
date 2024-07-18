@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="UNLa labs">
     <title>Eventos UNLa</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -23,18 +24,10 @@
                 <div class="sidebar-brand-text mx-3">UNLa eventos</div>
             </a>
             <hr class="sidebar-divider my-0">
-            <hr class="sidebar-divider">
             <li class="nav-item">
-                <a class="nav-link" href="/events">
+                <a class="nav-link" href="/index">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Eventos</span>
-                </a>
-            </li>
-            <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Usuarios</span>
+                    <span>Inicio</span>
                 </a>
             </li>
             <hr class="sidebar-divider">
@@ -57,11 +50,29 @@
 					</form>
                 </nav>
                 <div class="container-fluid">
-                    <div class="text-center">
-                        <p class="lead text-gray-800 mb-5">Buenos días</p>
-                    </div>
-                </div>
-            </div>
+                    <h1>Editar Usuario</h1>
+				    <form th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+				        <div>
+				            <label for="username">Nombre de Usuario:</label>
+				            <input type="text" id="username" th:field="*{username}" required />
+				        </div>
+				        <div>
+				            <label for="password">Contraseña:</label>
+				            <input type="password" id="password" th:field="*{password}" required />
+				        </div>
+				        <div class="form-group">
+                            <label for="role">Rol:</label>
+                            <select id="role" name="role" required class="form-control">
+                                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+                            </select>
+                        </div>
+				        <div>
+				            <button type="submit">Actualizar</button>
+				        </div>
+				    </form>
+				    <a th:href="@{/admin}">Volver a la Lista de Usuarios</a>
+	            </div>
+	         </div>
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">

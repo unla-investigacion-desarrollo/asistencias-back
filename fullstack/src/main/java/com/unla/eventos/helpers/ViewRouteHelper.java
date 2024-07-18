@@ -4,8 +4,14 @@ public class ViewRouteHelper {
 	//HOME
 	public final static String INDEX = "home/index";
 	
+	//ADMIN
+	public final static String ADMIN_INDEX = "admin/index";
+	public final static String ADMIN_CREATE = "admin/create";
+	public final static String ADMIN_EDIT = "admin/edit";
+	public final static String REDIRECT_ADMIN_USERS_CRUD = "redirect:/admin";
+	
 	//USER
-	public final static String USER_LOGIN = "user/login";
+	public final static String USER_LOGIN = "access/login";
 	
 	//EVENT
 	public final static String EVENT_INDEX = "event/index";

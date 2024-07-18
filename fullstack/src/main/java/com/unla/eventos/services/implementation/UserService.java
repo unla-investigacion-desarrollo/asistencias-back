@@ -3,6 +3,7 @@ package com.unla.eventos.services.implementation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -11,18 +12,23 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.unla.eventos.entities.UserRole;
 import com.unla.eventos.repositories.IUserRepository;
+import com.unla.eventos.repositories.IUserRoleRepository;
+import com.unla.eventos.services.IUserService;
 
 @Service("userService")
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, IUserService {
 
 	private IUserRepository userRepository;
+	private IUserRoleRepository userRoleRepository;
 
-	public UserService(IUserRepository userRepository) {
+	public UserService(IUserRepository userRepository, IUserRoleRepository userRoleRepository) {
 		this.userRepository = userRepository;
+		this.userRoleRepository = userRoleRepository;
 	}
 
 	@Override
@@ -44,4 +50,59 @@ public class UserService implements UserDetailsService {
 		}
 		return new ArrayList<>(grantedAuthorities);
 	}
+
+	@Override
+	public List<com.unla.eventos.entities.User> findAll() {
+        return userRepository.findAll();
+    }
+
+	@Override
+    public Optional<com.unla.eventos.entities.User> findById(int id) {
+        return userRepository.findById(id);
+    }
+
+	@Override
+    public com.unla.eventos.entities.User save(com.unla.eventos.entities.User user, String role) {
+		user.setEnabled(true); //TODO: By now this code don't use states for users
+    	user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+    	
+    	com.unla.eventos.entities.User userSaved = null;
+		Optional<com.unla.eventos.entities.User> oldUser = userRepository.findById(user.getId());
+		if(oldUser.isPresent()) {
+    		user.setCreatedAt(oldUser.get().getCreatedAt());
+    		user.setEnabled(oldUser.get().isEnabled());
+    		userSaved = userRepository.save(user);
+    		
+    		UserRole userRoleSaved = userRoleRepository.findByUserId(user.getId());
+    		userRoleSaved.setRole("ROLE_" + role);
+    		userRoleRepository.save(userRoleSaved);
+    	}else {
+    		try {
+        		userSaved = userRepository.save(user);
+        		UserRole userRole = new UserRole();
+                userRole.setUser(userSaved);
+                userRole.setRole("ROLE_" + role);
+                userRoleRepository.save(userRole);
+        	}catch (Exception e) {
+    			throw e;
+    		}
+    	}
+    	return userSaved;
+    }
+
+	@Override
+    public void deleteById(int id) {
+		UserRole userRoleSaved = userRoleRepository.findByUserId(id);
+		try {
+	        userRoleRepository.deleteById(userRoleSaved.getId());
+			userRepository.deleteById(id);
+		}catch (Exception e) {
+			throw e;
+		}
+    }
+	
+	@Override
+	public List<String> getAllRoles() {
+        return List.of("ADMIN", "USER");
+    }
 }
