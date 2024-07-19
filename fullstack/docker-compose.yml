@@ -27,6 +27,7 @@ services:
         -             8080:8080
       environment:
         SPRING_APPLICATION_JSON: '{
+          "server.servlet.context-path" : "/eventos",
           "spring.datasource.url"  : "jdbc:mysql://asistencias-fullstack-mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false",
           "spring.datasource.username" : "$MYSQLDB_USER",
           "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",

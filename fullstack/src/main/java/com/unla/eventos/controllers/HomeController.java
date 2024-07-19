@@ -25,8 +25,12 @@ public class HomeController {
 	
 	private ModelAndView mainIndex() {
 		ModelAndView modelAndView = new ModelAndView(ViewRouteHelper.INDEX);
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		modelAndView.addObject("username", user.getUsername());
+		try {
+			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			modelAndView.addObject("username", user.getUsername());
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		return modelAndView;
 	}
 }
