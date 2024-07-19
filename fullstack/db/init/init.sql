@@ -53,26 +53,12 @@ CREATE TABLE `assistance_response` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `eventos`.`user`
-(`created_at`,
-`enabled`,
-`password`,
-`updated_at`,
-`username`)
+(`created_at`, `enabled`, `password`, `updated_at`, `username`)
 VALUES
-('2024-01-07 00:00:00',
-TRUE,
-'$2a$10$uXx1ScuQG5/TdSXm1Jm4TekjXJfzu9/vqhZxJGdNa6NG9abA.EZk.',
-'2024-01-07 00:00:00',
-'admin');
+('2024-01-07 00:00:00', TRUE, '$2a$10$uXx1ScuQG5/TdSXm1Jm4TekjXJfzu9/vqhZxJGdNa6NG9abA.EZk.', '2024-01-07 00:00:00', 'admin');
 
 INSERT INTO `eventos`.`user_role`
-(`created_at`,
-`role`,
-`updated_at`,
-`user_id`)
+(`created_at`, `role`, `updated_at`, `user_id`)
 VALUES
-('2024-01-07 00:00:00',
-'ROLE_ADMIN',
-'2024-01-07 00:00:00',
-1);
+('2024-01-07 00:00:00', 'ROLE_ADMIN', '2024-01-07 00:00:00', 1);
 
