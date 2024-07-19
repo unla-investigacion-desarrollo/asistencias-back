@@ -7,13 +7,21 @@ DEPLOY
 Si se va a correr el proyecto con Docker Compose se tiene que crear un .env en la raíz del proyecto (al mismo nivel que el archivo de docker-compose.yml) con la siguiente información:
 
 CODE_EMAIL_SENDER=cvlbdrttfgbhovpy
+
 EMAIL_SENDER=test.unla.labs@gmail.com
+
 PUBLIC_QR_LINK_SERVER=localhost:8080/eventos/qr/
+
 MYSQLDB_DOCKER_PORT=3306
+
 MYSQLDB_DATABASE=eventos
+
 MYSQLDB_USER=root
+
 MYSQLDB_ROOT_PASSWORD=root12345678
+
 MYSQLDB_LOCAL_PORT=3309
+
 
 Cabe destacar que el mail que se está usando es de prueba, cuando se defina el mail principal se va a cambiar la propiedad EMAIL_SENDER.
 
