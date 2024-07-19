@@ -59,7 +59,7 @@ INSERT INTO `eventos`.`user`
 `updated_at`,
 `username`)
 VALUES
-('2024-01-07 00:00:00'
+('2024-01-07 00:00:00',
 TRUE,
 '$2a$10$uXx1ScuQG5/TdSXm1Jm4TekjXJfzu9/vqhZxJGdNa6NG9abA.EZk.',
 '2024-01-07 00:00:00',
@@ -71,7 +71,7 @@ INSERT INTO `eventos`.`user_role`
 `updated_at`,
 `user_id`)
 VALUES
-('2024-01-07 00:00:00'
+('2024-01-07 00:00:00',
 'ROLE_ADMIN',
 '2024-01-07 00:00:00',
 1);
