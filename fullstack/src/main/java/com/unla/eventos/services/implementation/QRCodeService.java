@@ -6,7 +6,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.unla.eventos.helpers.PublicLinksHelper;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,15 @@ import java.util.Map;
 @Service
 public class QRCodeService {
 
+	@Value("${PUBLIC_QR_LINK_SERVER}")
+	private String PUBLIC_QR_LINK_SERVER;
+	
 	public byte[] generateQRCodeBytes(String code, int width, int height) throws WriterException, IOException {
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        String qrText = PublicLinksHelper.PUBLIC_QR_LINK_SERVER + code;
+        String qrText = PUBLIC_QR_LINK_SERVER + code;
         BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, width, height, hints);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
