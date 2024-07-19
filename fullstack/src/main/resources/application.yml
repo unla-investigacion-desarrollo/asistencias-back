@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /eventos
 spring:
   datasource:
     url: ${DB_URL}
