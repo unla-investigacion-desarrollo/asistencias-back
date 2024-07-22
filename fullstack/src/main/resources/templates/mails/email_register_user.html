@@ -56,6 +56,10 @@
       Fecha finalziación: <span th:text="${eventEndDate}"></span>
     </p>
     <br>
+    <p th:if="${mailContact}">
+      Si necesitas más información, puedes contactarnos en: <span th:text="${mailContact}"></span>
+      <br/>
+    </p>
     <p>
       Muchas gracias. <br/>
     </p>

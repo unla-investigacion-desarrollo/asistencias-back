@@ -61,6 +61,7 @@
 								            <th>Name</th>
 								            <th>Start Date</th>
 								            <th>End Date</th>
+								            <th>Contact</th>
 								            <th>Code</th>
 								            <th>Public link</th>
 								            <th>Respuestas</th>
@@ -74,6 +75,7 @@
 								            <td th:text="${event.name}"></td>
 								            <td th:text="${event.startDateFormatted}"></td>
 								            <td th:text="${event.endDateFormatted}"></td>
+								            <td th:text="${event.mailContact}"></td>
 								            <td th:text="${event.uniqueCode}"></td>
 								            <td>
 											    <a th:href="${event.publicLink}" target="_blank">Link</a>

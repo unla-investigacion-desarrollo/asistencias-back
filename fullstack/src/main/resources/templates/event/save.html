@@ -72,6 +72,8 @@
 				        <input type="text" id="startDate" th:field="*{startDate}" th:value="${event.startDate}" required="required"/>
 				        <label>End Date:</label>
 				        <input type="text" id="endDate" th:field="*{endDate}" th:value="${event.endDate}" required="required"/>
+				        <label>Mail contact:</label>
+				        <input type="text" id="mailContact" th:field="*{mailContact}" th:value="${event.mailContact}" required="required"/>
 				        <button type="submit">Save</button>
 				    </form>
 				    <a th:href="@{/events}">Back to List</a>
