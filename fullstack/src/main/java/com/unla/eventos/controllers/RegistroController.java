@@ -47,6 +47,11 @@ public class RegistroController {
         return ViewRouteHelper.REGISTRO_NOTFOUND;
     }
     
+    @GetMapping("error")
+    public String error() {
+        return ViewRouteHelper.REGISTRO_ERROR;
+    }
+    
     @GetMapping("mail_in_use")
     public String mailInUse() {
         return ViewRouteHelper.REGISTRO_MAIL_IN_USE;
@@ -86,7 +91,6 @@ public class RegistroController {
 	            
 	            assistanceResponse.setEvent(event);
 	            try {
-	                assistanceResponseService.save(assistanceResponse);
 	                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
 			        Map<String, Object> message = new HashMap<>();
 			        message.put("name", assistanceResponse.getName());
@@ -94,10 +98,12 @@ public class RegistroController {
 			        message.put("eventName", event.getName());
 			        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
 			        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
-	
-			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento", message, qrCodeBytes);
+			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento (UNLa)", message, qrCodeBytes);
+			        assistanceResponseService.save(assistanceResponse);
 	            } catch (Exception e) {
 					// TODO: add errors on view
+	            	e.printStackTrace();
+	            	return "redirect:/" + ViewRouteHelper.REGISTRO_ERROR;
 				}
     		} else {
     			return "redirect:/" + ViewRouteHelper.REGISTRO_MAIL_IN_USE;
