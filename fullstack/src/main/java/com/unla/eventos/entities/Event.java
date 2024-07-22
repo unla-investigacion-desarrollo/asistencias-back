@@ -38,6 +38,8 @@ public class Event {
     private LocalDateTime endDate;
 
     private String uniqueCode;
+    
+    private String mailContact;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

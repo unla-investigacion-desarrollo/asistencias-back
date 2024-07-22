@@ -31,6 +31,7 @@ CREATE TABLE `event` (
   `start_date` datetime(6) DEFAULT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   `unique_code` varchar(255) DEFAULT NULL,
+  `mail_contact` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

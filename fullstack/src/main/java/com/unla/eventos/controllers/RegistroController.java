@@ -98,6 +98,7 @@ public class RegistroController {
 			        message.put("eventName", event.getName());
 			        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
 			        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
+			        message.put("mailContact", event.getMailContact());
 			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento (UNLa)", message, qrCodeBytes);
 			        assistanceResponseService.save(assistanceResponse);
 	            } catch (Exception e) {
