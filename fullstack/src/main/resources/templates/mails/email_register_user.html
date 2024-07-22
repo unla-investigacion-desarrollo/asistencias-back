@@ -4,19 +4,22 @@
   <meta charset="UTF-8">
   <title>Registro Cliente</title>
   <style>
-        .header {
-            background-color: #f2f2f2;
-            padding: 10px;
-            text-align: center;
-        }
-        .content {
-            padding: 20px;
-        }
-        .footer {
-            background-color: #f2f2f2;
-            padding: 10px;
-            text-align: center;
-        }
+	body {
+		color: #333;
+		font-family: "Poppins", sans-serif;
+	}
+    .header {
+        padding: 10px;
+        text-align: center;
+    }
+    .content {
+        padding: 20px;
+    }
+    .footer {
+        background-color: #f2f2f2;
+        padding: 10px;
+        text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -24,19 +27,29 @@
     <img src="cid:logoImage" alt="Logo">
   </div>
   <div class="content">
+    <p class="header">
+      ¡Felicitaciones!
+    </p>
     <p>
-      Inscripción correcta, se adjunta QR para mostrar el día de inicio del evento
+       Se confirma que tu inscripción se procesó correctamente.
+    </p>
+    <p>
+       En este mail se adjunta una imagen con el QR para garantizar tu acceso al evento.
+    </p>
+    <p>
+       Asegurate de guardar bien este mail, o de guardar la imagen del QR, ya que la deberás presentar el día del evento.
+    </p>
+    <p>
+       Importante. Este QR es único e instransferible, no lo compartas con terceros.
     </p>
     <br>
     <p>
-      <span style="font-weight: bold; font-size: 15px;">Detalles</span>:
+      <span style="font-weight: bold; font-size: 15px;">Detalles del evento</span>:
     </p>
     <p>
-      Nombre: <span th:text="${name}"></span>
+      Asistente: <span th:text="${name} + ', ' + ${lastName}"></span>
       <br/>
-      Apellido: <span th:text="${lastName}"></span>
-      <br/>
-      Evento: <span th:text="${eventName}"></span>
+      Nombre: <span th:text="${eventName}"></span>
       <br/>
       Fecha inicio: <span th:text="${eventStartDate}"></span>
       <br/>
@@ -46,8 +59,10 @@
     <p>
       Muchas gracias. <br/>
     </p>
-  </div>
-  <div class="footer">
+    <p>
+      Universidad Nacional de Lanús <br/>
+      <a href="https://www.unla.edu.ar/">UNLa Sitio Web</a>
+    </p>
   </div>
 </body>
 </html>

@@ -36,8 +36,10 @@ public class QRController {
             		assistanceResponse.setPresent(true);
             		assistanceResponseService.save(assistanceResponse);
             		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
+            		model.addAttribute("status", true);
             	} else {
                     model.addAttribute("mensaje", "Asistencia ya registrada.");
+            		model.addAttribute("status", false);
                 }
         	}
         } else {
