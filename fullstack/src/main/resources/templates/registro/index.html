@@ -6,12 +6,47 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="author" content="UNLa labs">
     <title>Eventos UNLa</title>
-    <style>
-		.spinner-border {
-		    width: 3rem;
-		    height: 3rem;
-		    display: none;
+    <link href="/eventos/css/registro.css" rel="stylesheet" type="text/css">
+    <style>		
+		@-webkit-keyframes spinner-border {
+		  to {
+		    -webkit-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
 		}
+		@keyframes spinner-border {
+		  to {
+		    -webkit-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
+		}
+		.spinner-border {
+		  display: inline-block;
+		  width: 2rem;
+		  height: 2rem;
+		  vertical-align: text-bottom;
+		  border: 0.25em solid currentColor;
+		  border-right-color: transparent;
+		  border-radius: 50%;
+		  -webkit-animation: spinner-border .75s linear infinite;
+		  animation: spinner-border .75s linear infinite;
+		  color: #007bff !important;
+          width: 3rem;
+          height: 3rem;
+          margin: 10px;
+		}
+        .disabled-button {
+          background-color: grey!important;
+          cursor: not-allowed!important;
+        }
+        .spinner-box {
+          display: none;
+        }
+        .spinner-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 	</style>
   </head>
   <body>
@@ -50,14 +85,19 @@
           </div>
         </div>
         <button type="submit" id="submitButton">Registrarse</button>
-        <div class="spinner-border text-primary" role="status" id="loadingSpinner">
-            <span class="sr-only">Procesando...</span>
+        <div class="spinner-box" id="loadingSpinner">
+        	<div class="spinner-container">
+            	<div class="spinner-border"></div>
+	            <span>Procesando...</span>
+	        </div>
         </div>
       </form>
     </section>
     <script>
         function showLoading() {
-            document.getElementById('submitButton').disabled = true;
+			var button = document.getElementById('submitButton');
+            button.disabled = true;
+            button.classList.add('disabled-button');
             document.getElementById('loadingSpinner').style.display = 'block';
         }
     </script>

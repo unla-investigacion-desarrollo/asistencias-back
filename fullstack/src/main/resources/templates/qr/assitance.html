@@ -1,48 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="author" content="UNLa labs">
     <title>Eventos UNLa</title>
-    <link href="/eventos/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <link href="/eventos/css/sb-admin-2.min.css" rel="stylesheet">
-</head>
-<body style="background-color:#7C1331; background-image:none" class="bg-gradient-primary">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div style="
-                            display: flex !important;
-                            align-items: center;
-                            justify-content: center;" class="col-lg-6 d-none d-lg-block bg-login-image">
-                                <img src="https://www.unla.edu.ar/images/logo_web.jpg"/>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1>No se puede procesar el QR</h1>
-                                        <h1>Por favor muestre el QR a un asistente el día del evento</h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <link href="/eventos/css/registro.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <section class="container">
+      <header>
+		<div class="titulo-container">
+			<img src="https://www.unla.edu.ar/images/logo_web.jpg"/>
+			<h2 th:text="'No se puede procesar el QR'" />
         </div>
-    </div>
-    <script src="/eventos/vendor/jquery/jquery.min.js"></script>
-    <script src="/eventos/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/eventos/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="/eventos/js/sb-admin-2.min.js"></script>
-</body>
+        <div>
+			<br/>
+            <h3>Por favor muestre el QR a un asistente el día del evento</h3>
+	    </div>
+	  </header>
+    </section>
+  </body>
 </html>
