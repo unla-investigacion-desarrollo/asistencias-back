@@ -1,10 +1,14 @@
+/* Estilos globales y para desktop */
 .titulo-container {
-	display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 .titulo-container img {
     margin-right: 20px;
+    max-width: 100%;
+    height: auto;
 }
 .titulo-container h2 {
     margin: 0;
@@ -20,7 +24,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
   background: #7C1331;
 }
 .container {
@@ -65,6 +69,7 @@ body {
 }
 .form .column {
   display: flex;
+  flex-wrap: wrap;
   column-gap: 15px;
 }
 .form .gender-box {
@@ -115,14 +120,32 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  background:  #7C1331;
+  background: #7C1331;
 }
-/*Responsive*/
+.form button.disabled-button {
+  background-color: grey !important;
+  cursor: not-allowed !important;
+}
+
+/* Estilos para móviles */
 @media screen and (max-width: 500px) {
-  .form .column {
-    flex-wrap: wrap;
+  .container {
+    padding: 20px;
   }
-  .form :where(.gender-option, .gender) {
-    row-gap: 15px;
+  .form .column {
+    flex-direction: column;
+  }
+  .form :where(.input-box input, .select-box) {
+    font-size: 0.875rem;
+  }
+  .input-box {
+    margin-top: 15px;
+  }
+  .form button {
+    height: 45px;
+    font-size: 0.875rem;
+  }
+  .spinner-box span {
+    font-size: 0.875rem;
   }
 }
