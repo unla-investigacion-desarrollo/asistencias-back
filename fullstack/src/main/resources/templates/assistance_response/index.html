@@ -84,6 +84,20 @@
                             <div>
                             	<a href="/eventos/events">Back to Events</a>
                             </div>
+							<div>
+								<p>
+									<b>Si hay registros en un excel externo, se puede importar </b>
+									<button id="show-import-from-excel">aquí</button>
+								</p>
+								<div id="importFromExcelDiv" style="display: none;">
+									<form method="POST" th:action="@{/responses/import}" enctype="multipart/form-data">
+										<input type="hidden" name="event" th:value="${eventId}" />
+										<label for="file">Seleccionar archivo Excel:</label>
+									    <input type="file" id="file" name="file" accept=".xlsx">
+									    <button type="submit">Procesar y guardar</button>
+									</form>
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +114,13 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+	<script>
+		const importFromExcelDiv = document.getElementById('importFromExcelDiv');
+		const showImportFromExcel = () => {
+            importFromExcelDiv.style.display = 'block';
+	    };
+		document.getElementById('show-import-from-excel').addEventListener('click', showImportFromExcel);
+	</script>
     <script src="/eventos/vendor/jquery/jquery.min.js"></script>
     <script src="/eventos/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/eventos/vendor/jquery-easing/jquery.easing.min.js"></script>

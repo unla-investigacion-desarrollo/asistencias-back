@@ -48,6 +48,8 @@ public class AssistanceResponse {
     private String investigadorCarrerasOtro;
     
     private String tipoInscripcion;
+    
+    private String source;
 
     @Column(length = 500)
     private String QRCode;
