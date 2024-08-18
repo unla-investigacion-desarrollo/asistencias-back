@@ -11,7 +11,9 @@ public interface IAssistanceResponseService {
 	
 	public void importFromExcel(InputStream is, int eventId) throws Exception;
 	
-	public Optional<Event> findByUniqueCode(String uniqueCode);
+	public Optional<Event> findEventByUniqueCode(String uniqueCode);
+	
+	public Optional<Event> findEventById(int eventId);
 	
 	public AssistanceResponse findByQRCode(String QRCode);
 	

@@ -56,7 +56,7 @@ public class AssistanceResponseController {
 	@PostMapping("/import")
     public String handleFileUpload(@RequestParam MultipartFile file, @RequestParam int event, RedirectAttributes redirectAttributes) {
         try {
-        	//assistanceResponseService.importFromExcel(file.getInputStream(), event);
+        	assistanceResponseService.importFromExcel(file.getInputStream(), event);
             redirectAttributes.addFlashAttribute("message", "El archivo se procesó correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", "Hubo un error al procesar el archivo.");

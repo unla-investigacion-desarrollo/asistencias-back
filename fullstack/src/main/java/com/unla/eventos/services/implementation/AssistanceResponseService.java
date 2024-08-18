@@ -2,6 +2,7 @@ package com.unla.eventos.services.implementation;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,41 +28,67 @@ public class AssistanceResponseService implements IAssistanceResponseService {
     private IEventService eventService;
 
     public void importFromExcel(InputStream is, int eventId) throws Exception {
-        Workbook workbook = new XSSFWorkbook(is);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rows = sheet.iterator();
+        Optional<Event> eventOp = this.findEventById(eventId);
+        if(eventOp.isPresent()) {
+        	Event event = eventOp.get();
+        	Workbook workbook = new XSSFWorkbook(is);
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
 
-        // Ignora la primera fila si tiene encabezados
-        if (rows.hasNext()) rows.next();
+            // Ignora la primera fila si tiene encabezados
+            if (rows.hasNext()) rows.next();
 
-        while (rows.hasNext()) {
             Row currentRow = rows.next();
+            boolean endFile = currentRow.getCell(0) == null || currentRow.getCell(0).getCellType() == CellType.BLANK;
+            while (rows.hasNext() && !endFile) {
+                AssistanceResponse response = new AssistanceResponse();
+                response.setName(getCellValue(currentRow.getCell(1)));
+                response.setLastName(getCellValue(currentRow.getCell(2)));
+                response.setDocumentNumber(getCellValue(currentRow.getCell(3)));
+                response.setEmail(getCellValue(currentRow.getCell(4)));
+                response.setMiembro(getCellValue(currentRow.getCell(5)));
+                if(currentRow.getCell(6) != null) {
+                    response.setRolPrincipal(getCellValue(currentRow.getCell(6)));
+                }
+                if(currentRow.getCell(7) != null) {
+                    response.setInvestigadorCarreras(getCellValue(currentRow.getCell(7)));
+                }
+                response.setTipoInscripcion(getCellValue(currentRow.getCell(8)));
+                
+                response.setPresent(false);
+                response.setAssistanceCertifySent(false);
+                response.setSource("Externo excel");
+                response.setQRCode(UUID.randomUUID().toString());
+                response.setEvent(event);
 
-            AssistanceResponse response = new AssistanceResponse();
-            response.setName(currentRow.getCell(0).getStringCellValue());
-            response.setLastName(currentRow.getCell(1).getStringCellValue());
-            response.setDocumentNumber(currentRow.getCell(2).getStringCellValue());
-            response.setEmail(currentRow.getCell(3).getStringCellValue());
-            response.setMiembro(currentRow.getCell(4).getStringCellValue());
-            response.setRolPrincipal(currentRow.getCell(5).getStringCellValue());
-            response.setRolPrincipalOtro(currentRow.getCell(6).getStringCellValue());
-            response.setInvestigadorCarreras(currentRow.getCell(7).getStringCellValue());
-            response.setInvestigadorCarrerasOtro(currentRow.getCell(8).getStringCellValue());
-            response.setTipoInscripcion(currentRow.getCell(9).getStringCellValue());
-            response.setSource("Externo excel");
+                System.out.println(response);
+                currentRow = rows.next();
+                endFile = currentRow.getCell(0) == null || currentRow.getCell(0).getCellType() == CellType.BLANK;
+                // Marca que estas respuestas vienen del Google Form
+                //response.setExternalForm(true);
 
-            // Marca que estas respuestas vienen del Google Form
-            //response.setExternalForm(true);
-
-            // Guarda la respuesta en la base de datos
-            //assistanceResponseRepository.save(response);
+                // Guarda la respuesta en la base de datos
+                //assistanceResponseRepository.save(response);
+            }
+            workbook.close();
         }
-        workbook.close();
+    }
+    
+    private String getCellValue(Cell cell) {
+        if (cell != null) {
+            DataFormatter dataFormatter = new DataFormatter();
+            return dataFormatter.formatCellValue(cell);
+        }
+        return "";
     }
 
     
-    public Optional<Event> findByUniqueCode(String uniqueCode) {
+    public Optional<Event> findEventByUniqueCode(String uniqueCode) {
         return eventService.findByUniqueCode(uniqueCode);
+    }
+    
+    public Optional<Event> findEventById(int eventId) {
+        return eventService.findById(eventId);
     }
     
 	public AssistanceResponse findByQRCode(String QRCode) {

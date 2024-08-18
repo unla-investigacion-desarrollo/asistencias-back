@@ -59,7 +59,7 @@ public class RegistroController {
     
     @GetMapping("/{uniqueCode}")
     public String mostrarFormularioRegistro(@PathVariable String uniqueCode, Model model) {
-    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
+    	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
@@ -83,7 +83,7 @@ public class RegistroController {
                                    @ModelAttribute String eventStartDate,
     							   @ModelAttribute String eventEndDate,
                                    HttpServletResponse response) {
-    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
+    	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmailAndEventId(assistanceResponse.getEmail(), eventOp.get().getId());
     		if(!preExisting.isPresent()) {
