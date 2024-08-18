@@ -36,6 +36,12 @@ public class AssistanceResponse {
     private String documentNumber;
 
     private String email;
+    
+    private String miembro;
+    
+    private String rolPrincipal;
+    
+    private String tipoInscripcion;
 
     @Column(length = 500)
     private String QRCode;

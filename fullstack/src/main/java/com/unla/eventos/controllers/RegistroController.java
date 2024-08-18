@@ -63,6 +63,9 @@ public class RegistroController {
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
+    		model.addAttribute("imagePath", event.getImagePath());
+    		model.addAttribute("title", event.getTitle());
+    		model.addAttribute("description", event.getDescription());
     		model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
     		model.addAttribute("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
         	model.addAttribute("uniqueCode", uniqueCode);

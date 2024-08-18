@@ -40,6 +40,12 @@ public class Event {
     private String uniqueCode;
     
     private String mailContact;
+    
+    private String imagePath;
+    
+    private String title;
+    
+    private String description;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

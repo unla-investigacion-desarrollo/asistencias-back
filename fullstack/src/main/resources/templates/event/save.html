@@ -64,18 +64,44 @@
                 </nav>
                 <div class="container-fluid">
                     <h1 th:text="${event.id != null} ? 'Edit Event' : 'Create Event'"></h1>
-				    <form th:action="@{/events}" th:object="${event}" method="post">
+				    <form th:action="@{/events}" th:object="${event}" method="post" enctype="multipart/form-data">
 				        <input type="hidden" th:field="*{id}"/>
-				        <label>Name:</label>
+				        <label>Nombre:</label>
 				        <input type="text" th:field="*{name}" required="required"/>
+						<br/><br/>
+						<label>Título:</label>
+						<br/>
+						<textarea th:field="*{title}" required="required" style="width: 50%; height: 100px;">
+						</textarea>
+						<br/><br/>
+						<label>Descripción:</label>
+						<br/>
+						<textarea th:field="*{description}" required="required" style="width: 50%; height: 100px;">
+						</textarea>
+						<br/><br/>
 				        <label>Start Date:</label>
 				        <input type="text" id="startDate" th:field="*{startDate}" th:value="${event.startDate}" required="required"/>
 				        <label>End Date:</label>
 				        <input type="text" id="endDate" th:field="*{endDate}" th:value="${event.endDate}" required="required"/>
-				        <label>Mail contact:</label>
+						<br/><br/>
+						<label>Mail contact:</label>
 				        <input type="text" id="mailContact" th:field="*{mailContact}" th:value="${event.mailContact}" required="required"/>
-				        <button type="submit">Save</button>
+						<br/><br/>
+						<label for="image">Imagen del evento en .png (opcional):</label>
+					    <input type="file" id="image" name="image" accept="image/png" />
+						<br/><br/>
+						<th:block th:if="${event.imagePath != null}">
+							<p><b>Imagen actual (no guarde sin cargarla nuevamente o se borrará)</b<></p>
+						    <img th:src="@{${event.imagePath}}" alt="Event Image" />
+							<br/><br/>
+						</th:block>
+						<th:block th:if="${event.imagePath == null}">
+						    <p>Sin imagen prefefinida</p>
+							<br/><br/>
+						</th:block>
+						<button type="submit">Save</button>
 				    </form>
+					<br/>
 				    <a th:href="@{/events}">Back to List</a>
 	            </div>
 	         </div>

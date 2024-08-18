@@ -55,24 +55,34 @@
       <header>
 		<div class="titulo-container">
 			<img src="https://www.unla.edu.ar/images/logo_web.jpg"/>
-			<h2 th:text="'Formulario de registro'" />
+			<h2 th:text="'Formulario de registro'"></h2>
         </div>
+		<div>
+			<th:block th:if="${imagePath != null}">
+				<br/>
+				<img th:src="@{${imagePath}}" alt="Event Image" />
+				<br/><br/>
+			</th:block>
+		</div>
         <div>
+			<h4 th:text="'Incio: ' + ${eventStartDate}"></h4>
+			<h4 th:text="'Fin: ' + ${eventEndDate}"></h4>
 			<br/>
-            <h2 th:text="'Evento: ' + ${eventName}" />
-            <br/>
-		    <h4 th:text="'Incio: ' + ${eventStartDate}" />
-		    <h4 th:text="'Fin: ' + ${eventEndDate}" />
 	    </div>
+		<div>
+			<h3 th:text="${title}"></h3>
+			<br/>
+			<h5 th:text="${description}"></h5>
+		</div>
 	  </header>
       <form class="form" th:action="@{/registro/submit}" method="post" th:object="${assistanceResponse}" onsubmit="showLoading()">
         <input type="hidden" name="uniqueCode" th:value="${uniqueCode}" />
         <div class="input-box">
-          <label>Nombre</label>
+          <label>Nombre/s:</label>
           <input th:field="*{name}" type="text" placeholder="Nombre" required />
         </div>
 		<div class="input-box">
-          <label>Apellido</label>
+          <label>Apellido/s:</label>
           <input th:field="*{lastName}" type="text" placeholder="Apellido" required />
         </div>
         <div class="column">
@@ -81,9 +91,38 @@
 	        <input th:field="*{documentNumber}" type="text" placeholder="Número de documento" required />
 		  </div>
           <div class="input-box">
-            <label>Email</label>
+            <label>Indique su correo electrónico:</label>
+			<p>Si es docente y/o estudiante UNLa complete el espacio a continuación con el correo con el que ingresa al campus, si no es así con uno personal que este en uso.</p>
             <input th:field="*{email}" type="text" placeholder="Email" required />
           </div>
+		  <div class="input-box">
+          	<label>¿Es miembro de la comunidad UNLa?:</label>
+			<select th:field="*{miembro}" required>
+				<option value=""></option>
+				<option value="Si">Si</option>
+				<option value="No">No</option>
+			</select>
+	      </div>
+		  <div class="input-box">
+			<label>Rol/Ocupación principal:</label>
+			<select th:field="*{rolPrincipal}" required>
+				<option value=""></option>
+				<option value="Estudiante de grado">Estudiante de grado</option>
+				<option value="Estudiante de posgrado">Estudiante de posgrado</option>
+				<option value="Docente-Investigador/a">Docente-Investigador/a</option>
+				<option value="Graduado">Graduado</option>
+				<option value="No docente">No docente</option>
+				<option value="Otro">Otro</option>
+			</select>
+		  </div>
+		  <div class="input-box">
+  			<label>Desea realizar su inscripción como:</label>
+		  	<select th:field="*{tipoInscripcion}" required>
+  				<option value=""></option>
+  				<option value="Asistente">Asistente</option>
+  				<option value="Participante de grupo de investigación">Participante de grupo de investigación</option>
+  			</select>
+  		  </div>
         </div>
         <button type="submit" id="submitButton">Registrarse</button>
         <div class="spinner-box" id="loadingSpinner">
