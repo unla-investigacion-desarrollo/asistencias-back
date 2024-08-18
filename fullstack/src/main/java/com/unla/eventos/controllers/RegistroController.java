@@ -58,7 +58,7 @@ public class RegistroController {
     }
     
     @GetMapping("/{uniqueCode}")
-    public String mostrarFormularioRegistro(@PathVariable("uniqueCode") String uniqueCode, Model model) {
+    public String mostrarFormularioRegistro(@PathVariable String uniqueCode, Model model) {
     	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
@@ -77,7 +77,7 @@ public class RegistroController {
     }
 
     @PostMapping("/submit")
-    public String procesarRegistro(@RequestParam("uniqueCode") String uniqueCode,
+    public String procesarRegistro(@RequestParam String uniqueCode,
                                    @ModelAttribute AssistanceResponse assistanceResponse,
                                    @ModelAttribute String eventName,
                                    @ModelAttribute String eventStartDate,

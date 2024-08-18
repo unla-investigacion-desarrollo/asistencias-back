@@ -104,17 +104,60 @@
 			</select>
 	      </div>
 		  <div class="input-box">
-			<label>Rol/Ocupación principal:</label>
-			<select th:field="*{rolPrincipal}" required>
-				<option value=""></option>
-				<option value="Estudiante de grado">Estudiante de grado</option>
-				<option value="Estudiante de posgrado">Estudiante de posgrado</option>
-				<option value="Docente-Investigador/a">Docente-Investigador/a</option>
-				<option value="Graduado">Graduado</option>
-				<option value="No docente">No docente</option>
-				<option value="Otro">Otro</option>
-			</select>
+			<p>Rol/Ocupación principal:</p>
+			<p>En el caso de seleccionar otra, indique detalles de su ocupación 
+			(Si es de otra universidad, no UNLa, o centro educativo indíquelo)</p>
 		  </div>
+		  <div>
+			<br/>
+			<input type="radio" id="opcion1" th:field="*{rolPrincipal}" value="Estudiante de grado" required />
+			<label for="opcion1">Estudiante de grado</label><br/><br/>
+			<input type="radio" id="opcion2" th:field="*{rolPrincipal}" value="Estudiante de posgrado" />
+			<label for="opcion2">Estudiante de posgrado</label><br/><br/>
+			<input type="radio" id="opcion3" th:field="*{rolPrincipal}" value="Docente-Investigador/a" />
+			<label for="opcion3">Docente-Investigador/a</label><br/><br/>
+			<input type="radio" id="opcion4" th:field="*{rolPrincipal}" value="Graduado" />
+			<label for="opcion4">Graduado</label><br/><br/>
+			<input type="radio" id="opcion5" th:field="*{rolPrincipal}" value="No docente" />
+			<label for="opcion5">No docente</label><br/><br/>
+			<input type="radio" id="opcionOtro" th:field="*{rolPrincipal}" value="Otro" />
+			<label for="opcionOtro">Otro</label><br/>
+		  </div>
+		  <div id="otroTexto" class="input-box" style="display:none;">
+	        <label for="otroInput">Especifique:</label>
+			<br/>
+	        <input type="text" id="otroInput" th:field="*{rolPrincipalOtro}">
+			<br/><br/>
+  	      </div>
+		  <div>
+			<br/><br/>
+			<label>Si es docente-investigador, indique carrera/s para la/s cual/es realiza tareas de investigación:</label>
+			<br/><br/>
+			<input type="checkbox" id="multiOpcion1" th:field="*{investigadorCarreras}" value="Lic. en C y T de los Alimentos" required/>
+			<label for="multiOpcion1">Lic. en C y T de los Alimentos</label><br/>
+			<input type="checkbox" id="multiOpcion2" th:field="*{investigadorCarreras}" value="Lic. en Sistemas" />
+			<label for="multiOpcion2">Lic. en Sistemas</label><br/>
+			<input type="checkbox" id="multiOpcion3" th:field="*{investigadorCarreras}" value="Lic. en Tecnologías Ferroviarias" />
+			<label for="multiOpcion3">Lic. en Tecnologías Ferroviarias</label><br/>
+			<input type="checkbox" id="multiOpcion4" th:field="*{investigadorCarreras}" value="Lic. en Economía empresarial" />
+			<label for="multiOpcion4">Lic. en Economía empresarial</label><br/>
+			<input type="checkbox" id="multiOpcion5" th:field="*{investigadorCarreras}" value="Lic. en Gestión ambiental Urbana" />
+			<label for="multiOpcion5">Lic. en Gestión ambiental Urbana</label><br/>
+			<input type="checkbox" id="multiOpcion6" th:field="*{investigadorCarreras}" value="Lic. en Economía política" />
+			<label for="multiOpcion6">Lic. en Economía política</label><br/>
+			<input type="checkbox" id="multiOpcion7" th:field="*{investigadorCarreras}" value="Lic. en Turismo" />
+			<label for="multiOpcion7">Lic. en Turismo</label><br/>
+			<input type="checkbox" id="multiOpcion8" th:field="*{investigadorCarreras}" value="Lic. en Logística" />
+			<label for="multiOpcion8">Lic. en Logística</label><br/>
+			<input type="checkbox" id="multiOpcionOtro" th:field="*{investigadorCarreras}" value="Otro" />
+			<label for="multiOpcionOtro">Otro:</label><br/>
+		  </div>
+		  <div id="multiOpcionOtroTexto" class="input-box" style="display:none;">
+		  	<label for="multiOpcionOtroInput">Especifique:</label>
+			<br/>
+		 	<input type="text" id="multiOpcionOtroInput" th:field="*{investigadorCarrerasOtro}">
+			<br/><br/>
+		  </div>	
 		  <div class="input-box">
   			<label>Desea realizar su inscripción como:</label>
 		  	<select th:field="*{tipoInscripcion}" required>
@@ -140,6 +183,35 @@
             button.classList.add('disabled-button');
             document.getElementById('loadingSpinner').style.display = 'block';
         }
+		//Opción otro checkbox simple
+		const opcionOtro = document.getElementById('opcionOtro');
+		const otroTextoDiv = document.getElementById('otroTexto');
+
+		const mostrarOcultarTexto = () => {
+		    if (opcionOtro.checked) {
+		        otroTextoDiv.style.display = 'block';
+		    } else {
+		        otroTextoDiv.style.display = 'none';
+		    }
+		};
+		document.querySelectorAll('input[name="rolPrincipal"]').forEach((input) => {
+		    input.addEventListener('change', mostrarOcultarTexto);
+		});
+		
+		//Opción otro checkbox múltiple
+		const multiOpcionOpcionOtro = document.getElementById('multiOpcionOtro');
+	    const multiOpcionOtroTextoDiv = document.getElementById('multiOpcionOtroTexto');
+
+	    const mostrarOcultarMultiOpcionTexto = () => {
+	        if (multiOpcionOpcionOtro.checked) {
+	            multiOpcionOtroTextoDiv.style.display = 'block';
+	        } else {
+	            multiOpcionOtroTextoDiv.style.display = 'none';
+	        }
+	    };
+		document.querySelectorAll('input[id="multiOpcionOtro"]').forEach((input) => {
+	        input.addEventListener('change', mostrarOcultarMultiOpcionTexto);
+	    });
     </script>
   </body>
 </html>

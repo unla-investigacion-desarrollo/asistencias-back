@@ -40,6 +40,12 @@ public class AssistanceResponse {
     private String miembro;
     
     private String rolPrincipal;
+
+    private String rolPrincipalOtro;
+    
+    private String investigadorCarreras;
+
+    private String investigadorCarrerasOtro;
     
     private String tipoInscripcion;
 
