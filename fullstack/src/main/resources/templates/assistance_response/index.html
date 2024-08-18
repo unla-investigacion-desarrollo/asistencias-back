@@ -88,6 +88,7 @@
 								<p>
 									<b>Si hay registros en un excel externo, se puede importar </b>
 									<button id="show-import-from-excel">aquí</button>
+									<p th:text="${message}"></p>
 								</p>
 								<div id="importFromExcelDiv" style="display: none;">
 									<form method="POST" th:action="@{/responses/import}" enctype="multipart/form-data">

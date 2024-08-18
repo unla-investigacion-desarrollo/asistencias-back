@@ -50,6 +50,8 @@ public class AssistanceResponse {
     private String tipoInscripcion;
     
     private String source;
+    
+    private boolean welcomeMailSent;
 
     @Column(length = 500)
     private String QRCode;
@@ -67,15 +69,4 @@ public class AssistanceResponse {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-	@Override
-	public String toString() {
-		return "AssistanceResponse [id=" + id + ", name=" + name + ", lastName=" + lastName + ", documentNumber="
-				+ documentNumber + ", email=" + email + ", miembro=" + miembro + ", rolPrincipal=" + rolPrincipal
-				+ ", rolPrincipalOtro=" + rolPrincipalOtro + ", investigadorCarreras=" + investigadorCarreras
-				+ ", investigadorCarrerasOtro=" + investigadorCarrerasOtro + ", tipoInscripcion=" + tipoInscripcion
-				+ ", source=" + source + ", QRCode=" + QRCode + ", isPresent=" + isPresent
-				+ ", isAssistanceCertifySent=" + isAssistanceCertifySent + ", event=" + event.getId() + ", createdAt="
-				+ createdAt + ", updatedAt=" + updatedAt + "]";
-	}
 }

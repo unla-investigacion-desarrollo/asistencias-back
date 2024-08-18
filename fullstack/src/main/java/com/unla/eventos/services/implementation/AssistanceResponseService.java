@@ -16,6 +16,7 @@ import java.io.InputStream;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 @Service
@@ -27,7 +28,8 @@ public class AssistanceResponseService implements IAssistanceResponseService {
     @Autowired
     private IEventService eventService;
 
-    public void importFromExcel(InputStream is, int eventId) throws Exception {
+    public int importFromExcel(InputStream is, int eventId) throws Exception {
+    	List<AssistanceResponse> externalAssistanceResponses = new ArrayList<AssistanceResponse>();
         Optional<Event> eventOp = this.findEventById(eventId);
         if(eventOp.isPresent()) {
         	Event event = eventOp.get();
@@ -38,40 +40,45 @@ public class AssistanceResponseService implements IAssistanceResponseService {
             // Ignora la primera fila si tiene encabezados
             if (rows.hasNext()) rows.next();
 
+            String email = "";
             Row currentRow = rows.next();
             boolean endFile = currentRow.getCell(0) == null || currentRow.getCell(0).getCellType() == CellType.BLANK;
-            while (rows.hasNext() && !endFile) {
-                AssistanceResponse response = new AssistanceResponse();
-                response.setName(getCellValue(currentRow.getCell(1)));
-                response.setLastName(getCellValue(currentRow.getCell(2)));
-                response.setDocumentNumber(getCellValue(currentRow.getCell(3)));
-                response.setEmail(getCellValue(currentRow.getCell(4)));
-                response.setMiembro(getCellValue(currentRow.getCell(5)));
-                if(currentRow.getCell(6) != null) {
-                    response.setRolPrincipal(getCellValue(currentRow.getCell(6)));
+            try {
+                while (rows.hasNext() && !endFile) {
+                	email = getCellValue(currentRow.getCell(4));
+                	Optional<AssistanceResponse> existingResponse = this.findByEmailAndEventId(email, eventId);
+                	if(!existingResponse.isPresent()) {
+		                AssistanceResponse response = new AssistanceResponse();
+		                response.setName(getCellValue(currentRow.getCell(1)));
+		                response.setLastName(getCellValue(currentRow.getCell(2)));
+		                response.setDocumentNumber(getCellValue(currentRow.getCell(3)));
+		                response.setEmail(email);
+		                response.setMiembro(getCellValue(currentRow.getCell(5)));
+		                response.setRolPrincipal(getCellValue(currentRow.getCell(6)));
+		                response.setInvestigadorCarreras(getCellValue(currentRow.getCell(7)));
+		                response.setTipoInscripcion(getCellValue(currentRow.getCell(8)));
+		                
+		                response.setPresent(false);
+		                response.setAssistanceCertifySent(false);
+		                response.setWelcomeMailSent(false);
+		                response.setSource("Externo excel");
+		                response.setQRCode(UUID.randomUUID().toString());
+		                response.setEvent(event);
+		                
+		                externalAssistanceResponses.add(response);
+                	}
+                	currentRow = rows.next();
+	                endFile = currentRow.getCell(0) == null || currentRow.getCell(0).getCellType() == CellType.BLANK;
                 }
-                if(currentRow.getCell(7) != null) {
-                    response.setInvestigadorCarreras(getCellValue(currentRow.getCell(7)));
-                }
-                response.setTipoInscripcion(getCellValue(currentRow.getCell(8)));
-                
-                response.setPresent(false);
-                response.setAssistanceCertifySent(false);
-                response.setSource("Externo excel");
-                response.setQRCode(UUID.randomUUID().toString());
-                response.setEvent(event);
-
-                System.out.println(response);
-                currentRow = rows.next();
-                endFile = currentRow.getCell(0) == null || currentRow.getCell(0).getCellType() == CellType.BLANK;
-                // Marca que estas respuestas vienen del Google Form
-                //response.setExternalForm(true);
-
-                // Guarda la respuesta en la base de datos
-                //assistanceResponseRepository.save(response);
-            }
-            workbook.close();
+                workbook.close();
+            }catch (Exception e) {
+				throw e;
+			}
+            for (AssistanceResponse assistanceResponse : externalAssistanceResponses) {
+				this.save(assistanceResponse);
+			}
         }
+        return externalAssistanceResponses.size();
     }
     
     private String getCellValue(Cell cell) {
@@ -79,7 +86,7 @@ public class AssistanceResponseService implements IAssistanceResponseService {
             DataFormatter dataFormatter = new DataFormatter();
             return dataFormatter.formatCellValue(cell);
         }
-        return "";
+        return null;
     }
 
     

@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 public interface IAssistanceResponseService {
 	
-	public void importFromExcel(InputStream is, int eventId) throws Exception;
+	public int importFromExcel(InputStream is, int eventId) throws Exception;
 	
 	public Optional<Event> findEventByUniqueCode(String uniqueCode);
 	

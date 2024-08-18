@@ -56,10 +56,10 @@ public class AssistanceResponseController {
 	@PostMapping("/import")
     public String handleFileUpload(@RequestParam MultipartFile file, @RequestParam int event, RedirectAttributes redirectAttributes) {
         try {
-        	assistanceResponseService.importFromExcel(file.getInputStream(), event);
-            redirectAttributes.addFlashAttribute("message", "El archivo se procesó correctamente.");
+        	int importedResponses =assistanceResponseService.importFromExcel(file.getInputStream(), event);
+            redirectAttributes.addFlashAttribute("message", "Se procesaron " + importedResponses + " respuestas");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", "Hubo un error al procesar el archivo.");
+            redirectAttributes.addFlashAttribute("message", "Hubo un error al procesar el archivo: " + e.getMessage());
             e.printStackTrace();
         }
         return ViewRouteHelper.REDIRECT_ASSISTANCE_RESPONSE_INDEX + event;

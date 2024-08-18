@@ -90,6 +90,7 @@ public class RegistroController {
 	    		Event event = eventOp.get();
 	    		assistanceResponse.setPresent(false);
 	            assistanceResponse.setAssistanceCertifySent(false);
+	            assistanceResponse.setWelcomeMailSent(true);
 	            assistanceResponse.setSource("Interno");
 	            assistanceResponse.setQRCode(UUID.randomUUID().toString());
 	            
