@@ -1,7 +1,5 @@
 package com.unla.eventos.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +14,6 @@ import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
-import com.unla.eventos.services.implementation.QRCodeService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,9 +26,6 @@ public class RegistroController {
 	
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
-    
-    @Autowired
-    private QRCodeService qrCodeService;
 
     RegistroController(IMailService mailService) {
         this.mailService = mailService;
@@ -96,15 +90,9 @@ public class RegistroController {
 	            
 	            assistanceResponse.setEvent(event);
 	            try {
-	                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
-			        Map<String, Object> message = new HashMap<>();
-			        message.put("name", assistanceResponse.getName());
-			        message.put("lastName", assistanceResponse.getLastName());
-			        message.put("eventName", event.getName());
-			        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
-			        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
-			        message.put("mailContact", event.getMailContact());
-			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento (UNLa)", message, qrCodeBytes);
+	            	mailService.prepareAndSendEmail(assistanceResponse.getQRCode(), assistanceResponse.getName(), assistanceResponse.getLastName(),
+	            									event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
+	            									assistanceResponse.getEmail());
 			        assistanceResponseService.save(assistanceResponse);
 	            } catch (Exception e) {
 					// TODO: add errors on view

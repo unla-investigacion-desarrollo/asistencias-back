@@ -2,8 +2,13 @@ package com.unla.eventos.services.implementation;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.MailConfigHelper;
 import com.unla.eventos.services.IMailService;
 
@@ -20,6 +26,9 @@ import com.unla.eventos.services.IMailService;
 @Slf4j
 public class MailService implements IMailService {
 
+	@Autowired
+    private QRCodeService qrCodeService;
+	
     private final JavaMailSender mailSender;
 
     private final SpringTemplateEngine templateEngine;
@@ -29,6 +38,19 @@ public class MailService implements IMailService {
         this.templateEngine = templateEngine;
     }
 
+    public void prepareAndSendEmail(String qRCode, String name, String lastName, String eventName,
+    		LocalDateTime eventStartDate, LocalDateTime eventEndDate, String mailContact, String assistanceResponseEmail) throws Exception{
+    	byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(qRCode, 300, 300);
+        Map<String, Object> message = new HashMap<>();
+        message.put("name", name);
+        message.put("lastName", lastName);
+        message.put("eventName", eventName);
+        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(eventStartDate));
+        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(eventEndDate));
+        message.put("mailContact", mailContact);
+        this.sendEmail(assistanceResponseEmail, "Confirmación de registro a evento (UNLa)", message, qrCodeBytes);
+    }
+    
     @Override
     public void sendEmail(String toUser, String subject, Map<String, Object> message, byte[] qrCodeBytes)
             throws MessagingException {
