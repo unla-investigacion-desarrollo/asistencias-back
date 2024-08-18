@@ -12,6 +12,8 @@ import com.unla.eventos.entities.Event;
 import com.unla.eventos.repositories.IAssistanceResponseRepository;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IEventService;
+import com.unla.eventos.services.IMailService;
+
 import java.io.InputStream;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -27,6 +29,9 @@ public class AssistanceResponseService implements IAssistanceResponseService {
     
     @Autowired
     private IEventService eventService;
+    
+    @Autowired
+	private IMailService mailService;
 
     public int importFromExcel(InputStream is, int eventId) throws Exception {
     	List<AssistanceResponse> externalAssistanceResponses = new ArrayList<AssistanceResponse>();
@@ -80,6 +85,24 @@ public class AssistanceResponseService implements IAssistanceResponseService {
         }
         return externalAssistanceResponses.size();
     }
+
+    public int sendMailsForNewResponses(int eventId) throws Exception {
+    	Optional<Event> eventOp = eventService.findById(eventId);
+    	int mailsSent = 0;
+    	if(eventOp.isPresent()) {
+    		Event event = eventOp.get();
+    		List<AssistanceResponse> responsesToSendEmail = assistanceResponseRepository.findByEventIdAndWelcomeMailSent(eventId, false);
+        	for (AssistanceResponse response : responsesToSendEmail) {
+        		mailService.prepareAndSendEmail(response.getQRCode(), response.getName(), response.getLastName(),
+    					event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
+    					response.getEmail());
+        		response.setWelcomeMailSent(true);
+        		this.save(response);
+    		}
+        	mailsSent = responsesToSendEmail.size();
+    	}
+    	return mailsSent;
+    }
     
     private String getCellValue(Cell cell) {
         if (cell != null) {
@@ -89,7 +112,6 @@ public class AssistanceResponseService implements IAssistanceResponseService {
         return null;
     }
 
-    
     public Optional<Event> findEventByUniqueCode(String uniqueCode) {
         return eventService.findByUniqueCode(uniqueCode);
     }
