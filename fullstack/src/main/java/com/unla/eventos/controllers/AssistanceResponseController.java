@@ -57,9 +57,20 @@ public class AssistanceResponseController {
     public String handleFileUpload(@RequestParam MultipartFile file, @RequestParam int event, RedirectAttributes redirectAttributes) {
         try {
         	int importedResponses =assistanceResponseService.importFromExcel(file.getInputStream(), event);
-            redirectAttributes.addFlashAttribute("message", "Se procesaron " + importedResponses + " respuestas");
+            redirectAttributes.addFlashAttribute("messageResponses", "Se procesaron " + importedResponses + " respuestas");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", "Hubo un error al procesar el archivo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("messageResponsesError", "Hubo un error al procesar el archivo: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return ViewRouteHelper.REDIRECT_ASSISTANCE_RESPONSE_INDEX + event;
+    }
+	
+	@PostMapping("/sendmails")
+    public String sendMails(@RequestParam int event, RedirectAttributes redirectAttributes) {
+        try {
+            redirectAttributes.addFlashAttribute("messageMails", "Mails enviados correctamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("messageMailsError", "Hubo un error en el envio de mails: " + e.getMessage());
             e.printStackTrace();
         }
         return ViewRouteHelper.REDIRECT_ASSISTANCE_RESPONSE_INDEX + event;
