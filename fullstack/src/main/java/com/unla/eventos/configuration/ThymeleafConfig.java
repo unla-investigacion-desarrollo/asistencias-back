@@ -11,7 +11,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 public class ThymeleafConfig {
 
     @Bean
-    public SpringResourceTemplateResolver templateResolver(){
+    SpringResourceTemplateResolver templateResolver(){
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setPrefix("classpath:/templates/");
         templateResolver.setSuffix(".html");
@@ -21,7 +21,7 @@ public class ThymeleafConfig {
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(){
+    SpringTemplateEngine templateEngine(){
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         return templateEngine;

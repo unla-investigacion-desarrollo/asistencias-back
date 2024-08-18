@@ -68,8 +68,8 @@ public class AssistanceResponseController {
 	@PostMapping("/sendmails")
     public String sendMailsForNewResponses(@RequestParam int event, RedirectAttributes redirectAttributes) {
         try {
-        	int mailsSent = assistanceResponseService.sendMailsForNewResponses(event);
-            redirectAttributes.addFlashAttribute("messageMails", "Mails enviados: " + mailsSent);
+        	assistanceResponseService.sendMailsForNewResponses(event);
+            redirectAttributes.addFlashAttribute("messageMails", "El proceso de envío de correos ha comenzado.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("messageMailsError", "Hubo un error en el envio de mails: " + e.getMessage());
             e.printStackTrace();

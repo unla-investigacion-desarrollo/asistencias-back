@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.unla.eventos.entities.AssistanceResponse;
@@ -86,22 +87,28 @@ public class AssistanceResponseService implements IAssistanceResponseService {
         return externalAssistanceResponses.size();
     }
 
-    public int sendMailsForNewResponses(int eventId) throws Exception {
+    @Async
+    public void sendMailsForNewResponses(int eventId) throws Exception {
     	Optional<Event> eventOp = eventService.findById(eventId);
-    	int mailsSent = 0;
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		List<AssistanceResponse> responsesToSendEmail = assistanceResponseRepository.findByEventIdAndWelcomeMailSent(eventId, false);
-        	for (AssistanceResponse response : responsesToSendEmail) {
-        		mailService.prepareAndSendEmail(response.getQRCode(), response.getName(), response.getLastName(),
-    					event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
-    					response.getEmail());
-        		response.setWelcomeMailSent(true);
-        		this.save(response);
+    		System.out.println("INICIA ENVIO DE MAILS DE BIENVENIDA");
+    		for (AssistanceResponse response : responsesToSendEmail) {
+        		try {
+        			mailService.prepareAndSendEmail(response.getQRCode(), response.getName(), response.getLastName(),
+        					event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
+        					response.getEmail());
+            		response.setWelcomeMailSent(true);
+            		this.save(response);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+					throw e;
+				}
     		}
-        	mailsSent = responsesToSendEmail.size();
+    		System.out.println("FINALIZA ENVIO DE MAILS DE BIENVENIDA, mails enviados: " + responsesToSendEmail.size());
     	}
-    	return mailsSent;
     }
     
     private String getCellValue(Cell cell) {

@@ -11,7 +11,7 @@ public interface IAssistanceResponseService {
 	
 	public int importFromExcel(InputStream is, int eventId) throws Exception;
 	
-	public int sendMailsForNewResponses(int eventId) throws Exception;
+	public void sendMailsForNewResponses(int eventId) throws Exception;
 	
 	public Optional<Event> findEventByUniqueCode(String uniqueCode);
 	
