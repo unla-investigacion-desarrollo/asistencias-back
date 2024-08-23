@@ -1,7 +1,5 @@
 package com.unla.eventos.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +14,6 @@ import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
-import com.unla.eventos.services.implementation.QRCodeService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,9 +26,6 @@ public class RegistroController {
 	
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
-    
-    @Autowired
-    private QRCodeService qrCodeService;
 
     RegistroController(IMailService mailService) {
         this.mailService = mailService;
@@ -58,11 +52,14 @@ public class RegistroController {
     }
     
     @GetMapping("/{uniqueCode}")
-    public String mostrarFormularioRegistro(@PathVariable("uniqueCode") String uniqueCode, Model model) {
-    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
+    public String mostrarFormularioRegistro(@PathVariable String uniqueCode, Model model) {
+    	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Event event = eventOp.get();
     		model.addAttribute("eventName", event.getName());
+    		model.addAttribute("imagePath", event.getImagePath());
+    		model.addAttribute("title", event.getTitle());
+    		model.addAttribute("description", event.getDescription());
     		model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
     		model.addAttribute("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
         	model.addAttribute("uniqueCode", uniqueCode);
@@ -74,32 +71,28 @@ public class RegistroController {
     }
 
     @PostMapping("/submit")
-    public String procesarRegistro(@RequestParam("uniqueCode") String uniqueCode,
+    public String procesarRegistro(@RequestParam String uniqueCode,
                                    @ModelAttribute AssistanceResponse assistanceResponse,
                                    @ModelAttribute String eventName,
                                    @ModelAttribute String eventStartDate,
     							   @ModelAttribute String eventEndDate,
                                    HttpServletResponse response) {
-    	Optional<Event> eventOp = assistanceResponseService.findByUniqueCode(uniqueCode);
+    	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
     		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmailAndEventId(assistanceResponse.getEmail(), eventOp.get().getId());
     		if(!preExisting.isPresent()) {
 	    		Event event = eventOp.get();
 	    		assistanceResponse.setPresent(false);
 	            assistanceResponse.setAssistanceCertifySent(false);
+	            assistanceResponse.setWelcomeMailSent(true);
+	            assistanceResponse.setSource("Interno");
 	            assistanceResponse.setQRCode(UUID.randomUUID().toString());
 	            
 	            assistanceResponse.setEvent(event);
 	            try {
-	                byte[] qrCodeBytes = qrCodeService.generateQRCodeBytes(assistanceResponse.getQRCode(), 300, 300);
-			        Map<String, Object> message = new HashMap<>();
-			        message.put("name", assistanceResponse.getName());
-			        message.put("lastName", assistanceResponse.getLastName());
-			        message.put("eventName", event.getName());
-			        message.put("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
-			        message.put("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
-			        message.put("mailContact", event.getMailContact());
-			        mailService.sendEmail(assistanceResponse.getEmail(), "Confirmación de registro a evento (UNLa)", message, qrCodeBytes);
+	            	mailService.prepareAndSendEmail(assistanceResponse.getQRCode(), assistanceResponse.getName(), assistanceResponse.getLastName(),
+	            									event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
+	            									assistanceResponse.getEmail());
 			        assistanceResponseService.save(assistanceResponse);
 	            } catch (Exception e) {
 					// TODO: add errors on view

@@ -5,10 +5,17 @@ import java.util.Optional;
 
 import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
+import java.io.InputStream;
 
 public interface IAssistanceResponseService {
 	
-	public Optional<Event> findByUniqueCode(String uniqueCode);
+	public int importFromExcel(InputStream is, int eventId) throws Exception;
+	
+	public void sendMailsForNewResponses(int eventId) throws Exception;
+	
+	public Optional<Event> findEventByUniqueCode(String uniqueCode);
+	
+	public Optional<Event> findEventById(int eventId);
 	
 	public AssistanceResponse findByQRCode(String QRCode);
 	

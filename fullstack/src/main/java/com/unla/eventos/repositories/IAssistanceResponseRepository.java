@@ -18,4 +18,6 @@ public interface IAssistanceResponseRepository extends JpaRepository<AssistanceR
 	public Optional<AssistanceResponse> findByEmailAndEventId(String email, int eventId);
 	
 	public List<AssistanceResponse> findByEventId(int eventId);
+	
+	public List<AssistanceResponse> findByEventIdAndWelcomeMailSent(int eventId, boolean welcomeMailSent);
 }

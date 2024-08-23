@@ -36,6 +36,22 @@ public class AssistanceResponse {
     private String documentNumber;
 
     private String email;
+    
+    private String miembro;
+    
+    private String rolPrincipal;
+
+    private String rolPrincipalOtro;
+    
+    private String investigadorCarreras;
+
+    private String investigadorCarrerasOtro;
+    
+    private String tipoInscripcion;
+    
+    private String source;
+    
+    private boolean welcomeMailSent;
 
     @Column(length = 500)
     private String QRCode;

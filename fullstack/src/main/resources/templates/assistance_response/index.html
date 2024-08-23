@@ -12,6 +12,47 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     <link href="/eventos/css/sb-admin-2.min.css" rel="stylesheet">
+	<style>		
+		@-webkit-keyframes spinner-border {
+		  to {
+		    -webkit-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
+		}
+		@keyframes spinner-border {
+		  to {
+		    -webkit-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
+		}
+		.spinner-border {
+		  display: inline-block;
+		  width: 2rem;
+		  height: 2rem;
+		  vertical-align: text-bottom;
+		  border: 0.25em solid currentColor;
+		  border-right-color: transparent;
+		  border-radius: 50%;
+		  -webkit-animation: spinner-border .75s linear infinite;
+		  animation: spinner-border .75s linear infinite;
+		  color: #007bff !important;
+          width: 3rem;
+          height: 3rem;
+          margin: 10px;
+		}
+        .disabled-button {
+          background-color: grey!important;
+          cursor: not-allowed!important;
+        }
+        .spinner-box {
+          display: none;
+        }
+        .spinner-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+	</style>
 </head>
 <body id="page-top">
     <div id="wrapper">
@@ -61,6 +102,7 @@
 							                <th>Document Number</th>
 							                <th>Email</th>
 							                <th>QR Code</th>
+											<th>Is Welcome Mail Sent</th>
 							                <th>Is Present</th>
 							                <th>Is Assistance Certify Sent</th>
 								        </tr>
@@ -72,6 +114,7 @@
 							                <td th:text="${response.documentNumber}"></td>
 							                <td th:text="${response.email}"></td>
 							                <td th:text="${response.QRCode}"></td>
+											<td th:text="${response.welcomeMailSent}"></td>
 							                <td th:text="${response.isPresent}"></td>
 							                <td th:text="${response.isAssistanceCertifySent}"></td>
 							            </tr>
@@ -84,6 +127,39 @@
                             <div>
                             	<a href="/eventos/events">Back to Events</a>
                             </div>
+							<div>
+								<form class="form" th:action="@{/responses/sendmails}" method="post" onsubmit="showLoading()">
+									<input type="hidden" name="event" th:value="${eventId}" />
+									<p>
+										<b>Si hay mails de bienvenida sin enviar presione </b>
+										<button type="submit" id="sendMailsButton">enviar bienvenidas faltantes</button>
+									</p>
+									<p style="color: green;" th:text="${messageMails}"></p>
+									<p style="color: red;" th:text="${messageMailsError}"></p>
+								</form>
+								<div class="spinner-box" id="loadingSpinner">
+						        	<div class="spinner-container">
+						            	<div class="spinner-border"></div>
+							            <span>Procesando...</span>
+							        </div>
+						        </div>
+							</div>	
+							<div>
+								<p>
+									<b>Si hay registros en un excel externo, se puede importar </b>
+									<button id="show-import-from-excel">aquí</button>
+									<p style="color: green;" th:text="${messageResponses}"></p>
+									<p style="color: red;" th:text="${messageResponsesError}"></p>
+								</p>
+								<div id="importFromExcelDiv" style="display: none;">
+									<form method="POST" th:action="@{/responses/import}" enctype="multipart/form-data">
+										<input type="hidden" name="event" th:value="${eventId}" />
+										<label for="file">Seleccionar archivo Excel:</label>
+									    <input type="file" id="file" name="file" accept=".xlsx">
+									    <button type="submit">Procesar y guardar</button>
+									</form>
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +176,20 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+	<script>
+        function showLoading() {
+			var button = document.getElementById('sendMailsButton');
+            button.disabled = true;
+            button.classList.add('disabled-button');
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+		
+		const importFromExcelDiv = document.getElementById('importFromExcelDiv');
+		const showImportFromExcel = () => {
+            importFromExcelDiv.style.display = 'block';
+	    };
+		document.getElementById('show-import-from-excel').addEventListener('click', showImportFromExcel);
+	</script>
     <script src="/eventos/vendor/jquery/jquery.min.js"></script>
     <script src="/eventos/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/eventos/vendor/jquery-easing/jquery.easing.min.js"></script>

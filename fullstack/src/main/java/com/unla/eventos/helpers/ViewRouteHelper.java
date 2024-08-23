@@ -12,6 +12,7 @@ public class ViewRouteHelper {
 	
 	//ASSISTANCE_RESPONSE
 	public final static String ASSISTANCE_RESPONSE_INDEX = "assistance_response/index";
+	public final static String REDIRECT_ASSISTANCE_RESPONSE_INDEX = "redirect:/responses/list/";
 	
 	//USER
 	public final static String USER_LOGIN = "access/login";

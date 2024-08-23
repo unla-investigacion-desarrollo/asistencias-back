@@ -49,7 +49,7 @@ public class AdminController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") int id, Model model) {
+    public String showUpdateForm(@PathVariable int id, Model model) {
         Optional<User> user = userService.findById(id);
         if (user.isPresent()) {
         	model.addAttribute("roles", userService.getAllRoles());
@@ -61,7 +61,7 @@ public class AdminController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") int id, @Valid User user, BindingResult result, @RequestParam String role, Model model) {
+    public String updateUser(@PathVariable int id, @Valid User user, BindingResult result, @RequestParam String role, Model model) {
         if (result.hasErrors()) {
             user.setId(id);
         	model.addAttribute("roles", userService.getAllRoles());
@@ -76,7 +76,7 @@ public class AdminController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") int id, Model model) {
+    public String deleteUser(@PathVariable int id, Model model) {
     	try {
             userService.deleteById(id);
 		} catch (Exception e) {
