@@ -65,6 +65,10 @@ public class Event {
     	return PublicLinksHelper.PUBLIC_REGISTER_LINK + getUniqueCode();
     }
     
+    public String publicResumeLink() {
+    	return PublicLinksHelper.PUBLIC_REGISTER_RESUME_LINK + getUniqueCode();
+    }
+    
     public String responsesLink() {
     	return PublicLinksHelper.PUBLIC_EVENT_RESPONSES + getId();
     }

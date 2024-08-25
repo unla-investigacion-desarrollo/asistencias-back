@@ -25,6 +25,7 @@ public class ViewRouteHelper {
 	//REGISTRO
 	public final static String REGISTRO_EXITO = "registro/exito";
 	public final static String REGISTRO_INDEX = "registro/index";
+	public final static String REGISTRO_RESUME = "registro/resumen";
 	public final static String REGISTRO_NOTFOUND = "registro/notfound";
 	public final static String REGISTRO_ERROR = "registro/error";
 	public final static String REGISTRO_MAIL_IN_USE = "registro/mail_in_use";

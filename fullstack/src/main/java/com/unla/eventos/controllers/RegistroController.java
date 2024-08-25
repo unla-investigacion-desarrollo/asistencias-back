@@ -55,19 +55,34 @@ public class RegistroController {
     public String mostrarFormularioRegistro(@PathVariable String uniqueCode, Model model) {
     	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
     	if(eventOp.isPresent()) {
-    		Event event = eventOp.get();
-    		model.addAttribute("eventName", event.getName());
-    		model.addAttribute("imagePath", event.getImagePath());
-    		model.addAttribute("title", event.getTitle());
-    		model.addAttribute("description", event.getDescription());
-    		model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
-    		model.addAttribute("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
-        	model.addAttribute("uniqueCode", uniqueCode);
-            model.addAttribute("assistanceResponse", new AssistanceResponse());
+    		model = buildModelByEvent(uniqueCode, model, eventOp.get());
             return ViewRouteHelper.REGISTRO_INDEX;	
     	}else {
     		return  "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
     	}
+    }
+    
+    @GetMapping("/min/{uniqueCode}")
+    public String mostrarFormularioResumido(@PathVariable String uniqueCode, Model model) {
+    	Optional<Event> eventOp = assistanceResponseService.findEventByUniqueCode(uniqueCode);
+    	if(eventOp.isPresent()) {
+    		model = buildModelByEvent(uniqueCode, model, eventOp.get());
+            return ViewRouteHelper.REGISTRO_RESUME;	
+    	}else {
+    		return  "redirect:/" + ViewRouteHelper.REGISTRO_NOTFOUND;
+    	}
+    }
+    
+    private Model buildModelByEvent(String uniqueCode, Model model, Event event) {
+		model.addAttribute("eventName", event.getName());
+		model.addAttribute("imagePath", event.getImagePath());
+		model.addAttribute("title", event.getTitle());
+		model.addAttribute("description", event.getDescription());
+		model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));
+		model.addAttribute("eventEndDate", FunctionsHelper.formatLocalDateToARGTime(event.getEndDate()));
+    	model.addAttribute("uniqueCode", uniqueCode);
+        model.addAttribute("assistanceResponse", new AssistanceResponse());
+        return model;
     }
 
     @PostMapping("/submit")
