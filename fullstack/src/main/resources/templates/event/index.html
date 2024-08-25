@@ -64,6 +64,7 @@
 								            <th>Contact</th>
 								            <th>Code</th>
 								            <th>Public link</th>
+											<th>Link resumido</th>
 								            <th>Respuestas</th>
 								            <th></th>
 								            <th></th>
@@ -79,6 +80,9 @@
 								            <td th:text="${event.uniqueCode}"></td>
 								            <td>
 											    <a th:href="${event.publicLink}" target="_blank">Link</a>
+											</td>
+											<td>
+											    <a th:href="${event.publicResumeLink}">Link</a>
 											</td>
 								            <td>
 											    <a th:href="${event.responsesLink}">Link</a>
