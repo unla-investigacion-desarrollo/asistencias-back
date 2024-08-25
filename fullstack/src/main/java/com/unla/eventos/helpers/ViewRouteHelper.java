@@ -32,4 +32,7 @@ public class ViewRouteHelper {
 	//QR
 	public final static String QR_RESULT = "qr/result";
 	public final static String QR_ASSISTANCE = "qr/assitance";
+	
+	//UPLOADS
+	public final static String UPLOADS_IMAGES_EVENTS = "uploads/images/events";
 }

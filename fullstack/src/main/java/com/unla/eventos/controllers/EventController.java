@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -64,7 +65,13 @@ public class EventController {
     		if (!image.isEmpty() && image.getContentType().equals("image/png")) {
                 String imagePath = saveImage(image);
                 event.setImagePath(imagePath);
-            }
+            } else {
+    			Optional<Event> existingEventOpt = event.getId() > 0 ? eventService.findById(event.getId()) : Optional.empty();
+    			if(existingEventOpt.isPresent() && existingEventOpt.get().getImagePath() != null && !existingEventOpt.get().getImagePath().isEmpty()) {
+    				deleteImage(existingEventOpt.get().getImagePath());
+                    event.setImagePath(null);
+    			}
+    		}
     		eventService.save(event);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,6 +80,7 @@ public class EventController {
     }
 
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable int id) {
     	try {
     		eventService.deleteById(id);
@@ -84,7 +92,7 @@ public class EventController {
     
     private String saveImage(MultipartFile image) throws IOException {
     	String fileName = UUID.randomUUID().toString() + ".png";
-        Path imageDirectory = Paths.get("src/main/resources/static/images/events");
+        Path imageDirectory = Paths.get(ViewRouteHelper.UPLOADS_IMAGES_EVENTS);
         
         if (!Files.exists(imageDirectory)) {
             Files.createDirectories(imageDirectory);
@@ -95,7 +103,7 @@ public class EventController {
         if (originalImage.getWidth() > maxWidth) {
             int newHeight = (originalImage.getHeight() * maxWidth) / originalImage.getWidth();
             
-            BufferedImage resizedImage = new BufferedImage(maxWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage resizedImage = new BufferedImage(maxWidth, newHeight, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = resizedImage.createGraphics();
             g2d.drawImage(originalImage.getScaledInstance(maxWidth, newHeight, Image.SCALE_SMOOTH), 0, 0, null);
             g2d.dispose();
@@ -107,7 +115,17 @@ public class EventController {
             Path imagePath = imageDirectory.resolve(fileName);
             Files.copy(image.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
         }
-        return "/images/events/" + fileName;
+        return fileName;
+    }
+    
+    private void deleteImage(String imageName) throws IOException {
+        try {
+            Path imageDirectory = Paths.get(ViewRouteHelper.UPLOADS_IMAGES_EVENTS);
+            Path imagePath = imageDirectory.resolve(imageName);
+            Files.deleteIfExists(imagePath);
+        } catch (IOException e) {
+            throw e;
+        }
     }
     
     private User getLoggedUser() {
