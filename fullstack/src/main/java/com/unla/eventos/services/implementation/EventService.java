@@ -7,7 +7,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
+import com.unla.eventos.repositories.IAssistanceResponseRepository;
 import com.unla.eventos.repositories.IEventRepository;
 import com.unla.eventos.services.IEventService;
 
@@ -16,6 +18,9 @@ public class EventService implements IEventService {
 
     @Autowired
     private IEventRepository eventRepository;
+    
+    @Autowired
+    private IAssistanceResponseRepository assistanceResponseRepository;
 
     public List<Event> findAll() {
         return eventRepository.findAll();
@@ -42,7 +47,16 @@ public class EventService implements IEventService {
     }
 
     public void deleteById(int id) {
-        eventRepository.deleteById(id);
+    	List<AssistanceResponse> responses = assistanceResponseRepository.findByEventId(id);
+    	try {
+    		for (AssistanceResponse assistanceResponse : responses) {
+    			assistanceResponseRepository.deleteById(assistanceResponse.getId());
+			}
+    		eventRepository.deleteById(id);
+    	}
+        catch (Exception e) {
+			throw e;
+		}
     }
     
     private String generateUniqueCode() {

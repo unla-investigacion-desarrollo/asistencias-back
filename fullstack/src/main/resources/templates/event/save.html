@@ -92,7 +92,7 @@
 						<br/><br/>
 						<th:block th:if="${event.imagePath != null}">
 							<p><b>Imagen actual (no guarde sin cargarla nuevamente o se borrará)</b<></p>
-						    <img th:src="@{${event.imagePath}}" alt="Event Image" />
+							<img th:src="@{/images/events/{filename}(filename=${event.imagePath})}" alt="Event Image" />
 							<br/><br/>
 						</th:block>
 						<th:block th:if="${event.imagePath == null}">
