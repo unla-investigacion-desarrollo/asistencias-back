@@ -32,8 +32,8 @@ public class QRController {
         				"Evento no iniciado. Vuelva a leer el QR después del: " +
         				FunctionsHelper.formatLocalDateToARGTime(assistanceResponse.getEvent().getStartDate()));
         	} else {
-        		if (!assistanceResponse.isPresent()) {
-            		assistanceResponse.setPresent(true);
+        		if (!assistanceResponse.isIsPresent()) {
+            		assistanceResponse.setIsPresent(true);
             		assistanceResponseService.save(assistanceResponse);
             		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
             		model.addAttribute("status", true);

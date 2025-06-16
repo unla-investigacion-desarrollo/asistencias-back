@@ -75,7 +75,7 @@ public class MailService implements IMailService {
             
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            log.error("ERROR en el envio de mail");
+            //log.error("ERROR en el envio de mail");
             throw new MessagingException(e.getMessage());
         }
     }

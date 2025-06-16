@@ -14,6 +14,7 @@ import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
+import com.unla.eventos.services.implementation.QRCodeService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -23,12 +24,16 @@ public class RegistroController {
 
 	@Autowired
 	private IMailService mailService;
+
+	@Autowired
+	private QRCodeService qrCodeService;
 	
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
 
-    RegistroController(IMailService mailService) {
+    RegistroController(IMailService mailService, QRCodeService qrCodeService) {
         this.mailService = mailService;
+		this.qrCodeService = qrCodeService;
     }
     
     @GetMapping("exito")
@@ -97,10 +102,10 @@ public class RegistroController {
     		Optional<AssistanceResponse> preExisting = assistanceResponseService.findByEmailAndEventId(assistanceResponse.getEmail(), eventOp.get().getId());
     		if(!preExisting.isPresent()) {
 	    		Event event = eventOp.get();
-	    		assistanceResponse.setPresent(false);
-	            assistanceResponse.setAssistanceCertifySent(false);
-	            assistanceResponse.setWelcomeMailSent(true);
+	            assistanceResponse.setIsAssistanceCertifySent(false);
 	            assistanceResponse.setSource("Interno");
+	    		assistanceResponse.setIsPresent(false);
+	            assistanceResponse.setIsAssistanceCertifySent(false);
 	            assistanceResponse.setQRCode(UUID.randomUUID().toString());
 	            
 	            assistanceResponse.setEvent(event);

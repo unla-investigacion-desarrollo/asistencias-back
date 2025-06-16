@@ -69,4 +69,174 @@ public class AssistanceResponse {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getQRCode() {
+        return QRCode;
+    }
+
+    public boolean isIsPresent() {
+        return isPresent;
+    }
+
+    public boolean isIsAssistanceCertifySent() {
+        return isAssistanceCertifySent;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setQRCode(String QRCode) {
+        this.QRCode = QRCode;
+    }
+
+    public void setIsPresent(boolean isPresent) {
+        this.isPresent = isPresent;
+    }
+
+    public void setIsAssistanceCertifySent(boolean isAssistanceCertifySent) {
+        this.isAssistanceCertifySent = isAssistanceCertifySent;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getMiembro() {
+        return miembro;
+    }
+
+    public String getRolPrincipal() {
+        return rolPrincipal;
+    }
+
+    public String getRolPrincipalOtro() {
+        return rolPrincipalOtro;
+    }
+
+    public String getInvestigadorCarreras() {
+        return investigadorCarreras;
+    }
+
+    public String getInvestigadorCarrerasOtro() {
+        return investigadorCarrerasOtro;
+    }
+
+    public String getTipoInscripcion() {
+        return tipoInscripcion;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public boolean isWelcomeMailSent() {
+        return welcomeMailSent;
+    }
+
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public void setPresent(boolean isPresent) {
+        this.isPresent = isPresent;
+    }
+
+    public boolean isAssistanceCertifySent() {
+        return isAssistanceCertifySent;
+    }
+
+    public void setAssistanceCertifySent(boolean isAssistanceCertifySent) {
+        this.isAssistanceCertifySent = isAssistanceCertifySent;
+    }
+
+    public void setMiembro(String miembro) {
+        this.miembro = miembro;
+    }
+
+    public void setRolPrincipal(String rolPrincipal) {
+        this.rolPrincipal = rolPrincipal;
+    }
+
+    public void setRolPrincipalOtro(String rolPrincipalOtro) {
+        this.rolPrincipalOtro = rolPrincipalOtro;
+    }
+
+    public void setInvestigadorCarreras(String investigadorCarreras) {
+        this.investigadorCarreras = investigadorCarreras;
+    }
+
+    public void setInvestigadorCarrerasOtro(String investigadorCarrerasOtro) {
+        this.investigadorCarrerasOtro = investigadorCarrerasOtro;
+    }
+
+    public void setTipoInscripcion(String tipoInscripcion) {
+        this.tipoInscripcion = tipoInscripcion;
+    }
+
+    public void setWelcomeMailSent(boolean welcomeMailSent) {
+        this.welcomeMailSent = welcomeMailSent;
+    }
+
+    
 }

@@ -48,8 +48,8 @@ public class ExcelExportService {
                 row.createCell(10).setCellValue(response.getSource());
                 row.createCell(11).setCellValue(response.isWelcomeMailSent());
                 row.createCell(12).setCellValue(response.getQRCode());
-                row.createCell(13).setCellValue(response.isPresent());
-                row.createCell(14).setCellValue(response.isAssistanceCertifySent());
+                row.createCell(13).setCellValue(response.isIsPresent());
+                row.createCell(14).setCellValue(response.isIsAssistanceCertifySent());
             }
 
             workbook.write(out);
