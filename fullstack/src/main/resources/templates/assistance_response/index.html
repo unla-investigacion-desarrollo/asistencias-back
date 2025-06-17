@@ -115,7 +115,14 @@
 							                <td th:text="${response.email}"></td>
 							                <td th:text="${response.QRCode}"></td>
 											<td th:text="${response.welcomeMailSent}"></td>
-							                <td th:text="${response.isPresent}"></td>
+                                            <td>
+                                                <ul th:each="day : ${assistanceDaysMap[response.id]}">
+                                                    <li>
+                                                        Día: <span th:text="${#temporals.format(day.eventDay.date, 'dd/MM/yyyy')}"></span>,
+                                                        Presente: <span th:text="${day.present ? 'Sí' : 'No'}"></span>
+                                                    </li>
+                                                </ul>
+                                            </td>
 							                <td th:text="${response.isAssistanceCertifySent}"></td>
 							            </tr>
                                     </tbody>

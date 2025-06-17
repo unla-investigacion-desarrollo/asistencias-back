@@ -12,6 +12,7 @@ import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
 import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.services.IAssistanceDaysService;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IMailService;
 
@@ -26,6 +27,9 @@ public class RegistroController {
 	
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
+
+	@Autowired
+	private IAssistanceDaysService assistanceDaysService;
 
     RegistroController(IMailService mailService) {
         this.mailService = mailService;
@@ -109,6 +113,7 @@ public class RegistroController {
 	            									event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
 	            									assistanceResponse.getEmail());
 			        assistanceResponseService.save(assistanceResponse);
+					assistanceDaysService.createAssistanceDaysForResponse(assistanceResponse);
 	            } catch (Exception e) {
 					// TODO: add errors on view
 	            	e.printStackTrace();

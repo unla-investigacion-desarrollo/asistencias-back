@@ -1,11 +1,15 @@
 package com.unla.eventos.controllers;
 
+import com.unla.eventos.entities.AssistanceDays;
 import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.helpers.FunctionsHelper;
 import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.services.IAssistanceDaysService;
 import com.unla.eventos.services.IAssistanceResponseService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +24,9 @@ public class QRController {
     @Autowired
     private IAssistanceResponseService assistanceResponseService;
 
+	@Autowired
+	private IAssistanceDaysService assistanceDaysService;
+
     @GetMapping("/qr/{qrCode}")
     public String procesarQRCode(@PathVariable String qrCode, Model model) {
     	Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -32,15 +39,27 @@ public class QRController {
         				"Evento no iniciado. Vuelva a leer el QR después del: " +
         				FunctionsHelper.formatLocalDateToARGTime(assistanceResponse.getEvent().getStartDate()));
         	} else {
-        		if (!assistanceResponse.isPresent()) {
-            		assistanceResponse.setPresent(true);
-            		assistanceResponseService.save(assistanceResponse);
-            		model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
-            		model.addAttribute("status", true);
-            	} else {
-                    model.addAttribute("mensaje", "Asistencia ya registrada.");
-            		model.addAttribute("status", false);
-                }
+				List<AssistanceDays> assistanceDayList = assistanceDaysService.findByAssistanceResponseId(assistanceResponse.getId());
+				LocalDate today = LocalDate.now();
+
+				// Verificar si ya se marcó presente hoy
+				boolean alreadyPresentToday = assistanceDayList.stream()
+						.anyMatch(ad -> ad.getEventDay().getDate().isEqual(today) && ad.isPresent());
+
+				if (!alreadyPresentToday) {
+					for (AssistanceDays ad : assistanceDayList) {
+						if (ad.getEventDay().getDate().isEqual(today)) {
+							ad.setPresent(true);
+							assistanceDaysService.save(ad);
+						}
+					}
+
+					model.addAttribute("mensaje", "Presencia marcada exitosamente. Disfrute del evento.");
+					model.addAttribute("status", true);
+				} else {
+					model.addAttribute("mensaje", "Asistencia ya registrada.");
+					model.addAttribute("status", false);
+				}
         	}
         } else {
             model.addAttribute("mensaje", "Código QR inválido.");
