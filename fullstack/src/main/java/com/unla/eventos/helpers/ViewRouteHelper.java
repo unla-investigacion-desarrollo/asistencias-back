@@ -21,6 +21,7 @@ public class ViewRouteHelper {
 	public final static String EVENT_INDEX = "event/index";
 	public final static String EVENT_SAVE = "event/save";
 	public final static String REDIRECT_EVENTS_CRUD = "redirect:/events";
+	public final static String EVENT_DAYS = "event/event-days/list";
 	
 	//REGISTRO
 	public final static String REGISTRO_EXITO = "registro/exito";

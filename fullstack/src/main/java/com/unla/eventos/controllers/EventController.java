@@ -1,6 +1,7 @@
 package com.unla.eventos.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.unla.eventos.entities.Event;
+import com.unla.eventos.entities.EventDays;
 import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.services.IEventDaysService;
 import com.unla.eventos.services.IEventService;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,11 +35,21 @@ public class EventController {
     @Autowired
     private IEventService eventService;
 
+    @Autowired
+    private IEventDaysService eventDaysService;
+
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("events", eventService.findAll());
 		model.addAttribute("username", getLoggedUser().getUsername());
         return ViewRouteHelper.EVENT_INDEX;
+    }
+
+    @GetMapping("/{id}/days")
+    public String viewEventDays(@PathVariable("id") int eventId, Model model) {
+        List<EventDays> days = eventDaysService.findByEventId(eventId);
+        model.addAttribute("days", days);
+        return ViewRouteHelper.EVENT_DAYS;
     }
 
     @GetMapping("/new")
@@ -73,6 +86,7 @@ public class EventController {
     			}
     		}
     		eventService.save(event);
+            eventDaysService.save(event);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,6 +98,7 @@ public class EventController {
     public String delete(@PathVariable int id) {
     	try {
     		eventService.deleteById(id);
+            eventDaysService.deleteByEventId(id);
 		} catch (Exception e) {
 			//TODO: Add errors on view
 		}

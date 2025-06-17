@@ -1,110 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="UNLa labs">
-    <title>Eventos UNLa</title>
+    <title>Días del Evento</title>
     <link href="/eventos/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="/eventos/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 <body id="page-top">
+
     <div id="wrapper">
+        <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/eventos/">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fas fa-calendar-day"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">UNLa eventos</div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link" href="/eventos/">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Inicio</span>
+                    <i class="fas fa-fw fa-arrow-left"></i>
+                    <span>Volver a eventos</span>
                 </a>
             </li>
             <hr class="sidebar-divider">
         </ul>
+
+        <!-- Content -->
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
+
+                <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <ul class="navbar-nav ml-auto">
                         <div class="topbar-divider d-none d-sm-block"></div>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span th:text="${username}" class="mr-2 d-none d-lg-inline text-gray-600 small" />
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span th:text="${username}" class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                             </a>
                         </li>
                     </ul>
                     <form th:action="@{/logout}" method="post">
-						<input class="dropdown-item" style="cursor: pointer"
-							type="submit" value="Salir" />
-					</form>
+                        <input class="dropdown-item" style="cursor: pointer" type="submit" value="Salir" />
+                    </form>
                 </nav>
+
+                <!-- Page Content -->
                 <div class="container-fluid">
-                    <h1 class="h3 mb-2 text-gray-800">Eventos</h1>
-                    <a href="events/new">Create New Event</a>
+                    <h1 class="h3 mb-2 text-gray-800">Días del Evento</h1>
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-								            <th>Number</th>
-								            <th>Name</th>
-								            <th>Start Date</th>
-								            <th>End Date</th>
-                                            <th>Days</th>
-								            <th>Contact</th>
-								            <th>Code</th>
-								            <th>Public link</th>
-											<th>Link resumido</th>
-								            <th>Respuestas</th>
-								            <th></th>
-								            <th></th>
-								        </tr>
+                                            <th>ID</th>
+                                            <th>Fecha</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="event : ${events}">
-								            <td th:text="${event.id}"></td>
-								            <td th:text="${event.name}"></td>
-								            <td th:text="${event.startDateFormatted}"></td>
-								            <td th:text="${event.endDateFormatted}"></td>
-                                            <td>
-                                                <a th:href="@{|/events/${event.id}/days|}">View Days</a>
-                                            </td>
-								            <td th:text="${event.mailContact}"></td>
-								            <td th:text="${event.uniqueCode}"></td>
-								            <td>
-											    <a th:href="${event.publicLink}" target="_blank">Link</a>
-											</td>
-											<td>
-											    <a th:href="${event.publicResumeLink}">Link</a>
-											</td>
-								            <td>
-											    <a th:href="${event.responsesLink}">Link</a>
-											</td>
-								            <td>
-								                <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
-								            </td>
-								            <td>
-								                <a th:href="@{|/events/delete/${event.id}|}" onclick="return confirm('Are you sure?')">Delete</a>
-								            </td>
-								        </tr>
+                                        <tr th:each="day : ${days}">
+                                            <td th:text="${day.id}"></td>
+                                            <td th:text="${#temporals.format(day.date, 'dd/MM/yyyy')}"></td>
+                                        </tr>
                                     </tbody>
                                 </table>
+                                <a href="/eventos/events" class="btn btn-secondary mt-3">Volver</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -114,6 +89,8 @@
             </footer>
         </div>
     </div>
+
+    <!-- Scripts -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
@@ -121,8 +98,5 @@
     <script src="/eventos/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/eventos/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/eventos/js/sb-admin-2.min.js"></script>
-    <script src="/eventos/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="/eventos/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="/eventos/js/demo/datatables-demo.js"></script>
 </body>
 </html>
