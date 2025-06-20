@@ -24,4 +24,6 @@ public interface IAssistanceResponseService {
     public AssistanceResponse save(AssistanceResponse assistanceResponse);
     
     public List<AssistanceResponse> findByEventId(int eventId);
+
+	public List<AssistanceResponse> findByEventIdWithEvent(int eventId);
 }

@@ -79,4 +79,33 @@ public class MailService implements IMailService {
             throw new MessagingException(e.getMessage());
         }
     }
+
+    @Override
+    public void sendCertificate(String toUser, String subject, Map<String, Object> message, byte[] qrCodeBytes)
+            throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try{
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setTo(toUser);
+            mimeMessageHelper.setSubject(subject);
+
+            Context context = new Context();
+            context.setVariables(message);
+
+            String htmlContent = templateEngine.process(MailConfigHelper.TEMPLATE_CERTIFICADO, context);
+            mimeMessageHelper.setText(htmlContent,true);
+
+            ClassPathResource resource = new ClassPathResource("/static/images/logo.png");
+            mimeMessageHelper.addInline("logoImage", resource);
+
+            // Adjuntar el Certificado
+            ByteArrayResource qrCodeResource = new ByteArrayResource(qrCodeBytes);
+            mimeMessageHelper.addAttachment("certificate.png", qrCodeResource);
+            
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("ERROR en el envio de mail");
+            throw new MessagingException(e.getMessage());
+        }
+    }
 }

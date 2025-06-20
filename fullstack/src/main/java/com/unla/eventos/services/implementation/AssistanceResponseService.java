@@ -142,4 +142,9 @@ public class AssistanceResponseService implements IAssistanceResponseService {
     public List<AssistanceResponse> findByEventId(int eventId) {
         return assistanceResponseRepository.findByEventId(eventId);
     }
+
+	@Override
+	public List<AssistanceResponse> findByEventIdWithEvent(int eventId) {
+		return assistanceResponseRepository.findByEventIdWithEvent(eventId);
+	}
 }
