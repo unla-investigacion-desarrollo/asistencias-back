@@ -14,4 +14,6 @@ public interface IMailService {
         
     void sendCertificate(String toUser, String subject, Map<String, Object> message, byte[] qrCodeBytes)
                 throws MessagingException;
+
+    void sendEncuesta(String toUser, String subject, String messageText);
 }

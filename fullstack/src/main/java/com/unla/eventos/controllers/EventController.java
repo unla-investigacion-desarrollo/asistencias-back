@@ -13,11 +13,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.unla.eventos.entities.AssistanceDays;
+import com.unla.eventos.entities.AssistanceResponse;
 import com.unla.eventos.entities.Event;
 import com.unla.eventos.entities.EventDays;
 import com.unla.eventos.helpers.ViewRouteHelper;
+import com.unla.eventos.services.IAssistanceDaysService;
+import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.IEventDaysService;
 import com.unla.eventos.services.IEventService;
+import com.unla.eventos.services.IMailService;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,6 +43,15 @@ public class EventController {
 
     @Autowired
     private IEventDaysService eventDaysService;
+
+    @Autowired
+    private IAssistanceResponseService assistanceResponseService;
+
+    @Autowired
+    private IAssistanceDaysService assistanceDaysService;
+
+    @Autowired
+    private IMailService mailService;
 
     @GetMapping
     public String getAll(Model model) {
@@ -146,4 +161,41 @@ public class EventController {
     private User getLoggedUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    @PostMapping("/enviar-feedback")
+    public String enviarEncuestaPorMail(@RequestParam String uniqueCode, Model model) {
+        Optional<Event> eventOp = eventService.findByUniqueCode(uniqueCode);
+
+        if (eventOp.isPresent()) {
+            Event event = eventOp.get();
+
+            List<AssistanceResponse> assistanceResponses = assistanceResponseService.findByEventId(event.getId());
+            int enviados = 0;
+
+            for (AssistanceResponse asistente : assistanceResponses) {
+                List<AssistanceDays> dias = assistanceDaysService.findByAssistanceResponseId(asistente.getId());
+                boolean asistioAlMenosUnDia = dias.stream().anyMatch(AssistanceDays::isPresent);
+
+                if (asistioAlMenosUnDia) {
+                    // Armar asunto y cuerpo
+                    String subject = "Encuesta de satisfacción - " + event.getName();
+                    String body = "Hola " + asistente.getName() + ",\n\n" +
+                            "Gracias por asistir al evento \"" + event.getName() + "\".\n" +
+                            "Por favor, completá la encuesta en el siguiente enlace:\n\n" +
+                            "http://localhost:8080/eventos/feedback/" + uniqueCode + "\n\n" +
+                            "¡Muchas gracias!\n\nUniversidad Nacional de Lanús";
+
+                    mailService.sendEncuesta(asistente.getEmail(), subject, body);
+                    enviados++;
+                }
+            }
+
+            model.addAttribute("success", "Se enviaron " + enviados + " encuestas correctamente.");
+        } else {
+            model.addAttribute("error", "No se encontró el evento.");
+        }
+
+        return getAll(model);
+    }
+
 }

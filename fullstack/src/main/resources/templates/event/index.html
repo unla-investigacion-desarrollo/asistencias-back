@@ -49,6 +49,20 @@
 					</form>
                 </nav>
                 <div class="container-fluid">
+                    <!-- ALERTAS -->
+                    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <span th:text="${success}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span th:text="${error}"></span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <h1 class="h3 mb-2 text-gray-800">Eventos</h1>
                     <a href="events/new">Create New Event</a>
                     <div class="card shadow mb-4">
@@ -67,6 +81,7 @@
 								            <th>Public link</th>
 											<th>Link resumido</th>
 								            <th>Respuestas</th>
+                                            <th>Enviar encuesta</th>
 								            <th></th>
 								            <th></th>
 								        </tr>
@@ -91,6 +106,12 @@
 								            <td>
 											    <a th:href="${event.responsesLink}">Link</a>
 											</td>
+                                            <td>
+                                                <form th:action="@{/events/enviar-feedback}" method="post">
+                                                    <input type="hidden" name="uniqueCode" th:value="${event.uniqueCode}" />
+                                                    <button class="btn btn-sm btn-primary" type="submit">Enviar</button>
+                                                </form>
+                                            </td>
 								            <td>
 								                <a th:href="@{|/events/edit/${event.id}|}">Edit</a>
 								            </td>

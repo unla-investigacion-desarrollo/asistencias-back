@@ -6,6 +6,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -108,4 +108,20 @@ public class MailService implements IMailService {
             throw new MessagingException(e.getMessage());
         }
     }
+
+    public void sendEncuesta(String toUser, String subject, String messageText) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(toUser);
+            helper.setSubject(subject);
+            helper.setText(messageText, false);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("ERROR en el envío de encuesta a {}", toUser, e);
+            throw new RuntimeException("Error al enviar encuesta", e);
+        }
+    }
+
 }

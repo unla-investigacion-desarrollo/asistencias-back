@@ -30,6 +30,11 @@ public class ViewRouteHelper {
 	public final static String REGISTRO_NOTFOUND = "registro/notfound";
 	public final static String REGISTRO_ERROR = "registro/error";
 	public final static String REGISTRO_MAIL_IN_USE = "registro/mail_in_use";
+
+	//FEEDBACK
+	public final static String FEEDBACK_INDEX = "feedback/index";
+	public final static String FEEDBACK_NOTFOUND = "feedback/notfound";
+	public final static String FEEDBACK_EXITO = "feedback/exito";
 	
 	//QR
 	public final static String QR_RESULT = "qr/result";
