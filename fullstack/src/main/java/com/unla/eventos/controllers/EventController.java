@@ -29,6 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -163,14 +165,13 @@ public class EventController {
     }
 
     @PostMapping("/enviar-feedback")
-    public String enviarEncuestaPorMail(@RequestParam String uniqueCode, Model model) {
+    public String enviarEncuestaPorMail(@RequestParam String uniqueCode, RedirectAttributes redirectAttributes) {
         Optional<Event> eventOp = eventService.findByUniqueCode(uniqueCode);
 
         if (eventOp.isPresent()) {
             Event event = eventOp.get();
 
             List<AssistanceResponse> assistanceResponses = assistanceResponseService.findByEventId(event.getId());
-            int enviados = 0;
 
             for (AssistanceResponse asistente : assistanceResponses) {
                 List<AssistanceDays> dias = assistanceDaysService.findByAssistanceResponseId(asistente.getId());
@@ -186,16 +187,15 @@ public class EventController {
                             "¡Muchas gracias!\n\nUniversidad Nacional de Lanús";
 
                     mailService.sendEncuesta(asistente.getEmail(), subject, body);
-                    enviados++;
                 }
             }
 
-            model.addAttribute("success", "Se enviaron " + enviados + " encuestas correctamente.");
+            redirectAttributes.addFlashAttribute("messageMails", "El envío de encuestas ha comenzado. El proceso puede demorar unos minutos.");
         } else {
-            model.addAttribute("error", "No se encontró el evento.");
+            redirectAttributes.addFlashAttribute("messageMailsError", "No se encontró el evento.");
         }
 
-        return getAll(model);
+        return ViewRouteHelper.REDIRECT_EVENTS_CRUD;
     }
 
 }
