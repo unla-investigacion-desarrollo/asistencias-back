@@ -53,6 +53,16 @@ CREATE TABLE `assistance_response` (
   CONSTRAINT `FKonoqp60wntimejd3in1cadl1w` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+ALTER TABLE assistance_response
+ADD COLUMN miembro VARCHAR(255),
+ADD COLUMN rol_principal VARCHAR(255),
+ADD COLUMN rol_principal_otro VARCHAR(255),
+ADD COLUMN investigador_carreras VARCHAR(255),
+ADD COLUMN investigador_carreras_otro VARCHAR(255),
+ADD COLUMN tipo_inscripcion VARCHAR(255),
+ADD COLUMN source VARCHAR(255),
+ADD COLUMN welcome_mail_sent BIT(1) NOT NULL DEFAULT 0;
+
 INSERT INTO `eventos`.`user`
 (`created_at`, `enabled`, `password`, `updated_at`, `username`)
 VALUES

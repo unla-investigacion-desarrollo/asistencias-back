@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado de asistencia</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            color: #333;
+        }
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="cid:logoImage" alt="Logo">
+    </div>
+    <div class="content">
+        <h2>Certificado de Asistencia</h2>
+        <p>Estimado/a <strong th:text="${nombre}">[Nombre]</strong>,</p>
+        <p>
+            Le informamos que ha asistido satisfactoriamente al evento organizado por la Universidad Nacional de Lanús.
+        </p>
+        <p>
+            Fecha: <span th:text="${fecha}">[Fecha]</span><br/>
+            En carácter de: <span th:text="${caracter}">[Rol]</span>
+        </p>
+        <p>
+            En este correo encontrará adjunto su certificado en formato imagen.
+        </p>
+        <p>Saludos cordiales,<br/>UNLa</p>
+    </div>
+</body>
+</html>

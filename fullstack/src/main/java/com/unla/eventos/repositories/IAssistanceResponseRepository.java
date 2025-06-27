@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.unla.eventos.entities.AssistanceResponse;
@@ -20,4 +21,7 @@ public interface IAssistanceResponseRepository extends JpaRepository<AssistanceR
 	public List<AssistanceResponse> findByEventId(int eventId);
 	
 	public List<AssistanceResponse> findByEventIdAndWelcomeMailSent(int eventId, boolean welcomeMailSent);
+
+	@Query("SELECT ar FROM AssistanceResponse ar JOIN FETCH ar.event WHERE ar.event.id = :eventId")
+	public List<AssistanceResponse> findByEventIdWithEvent(@Param("eventId") int eventId);
 }

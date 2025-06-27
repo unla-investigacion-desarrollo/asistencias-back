@@ -3,6 +3,7 @@ package com.unla.eventos.helpers;
 public class ViewRouteHelper {
 	//HOME
 	public final static String INDEX = "home/index";
+	public final static String ABOUT_US = "about_us/index";
 	
 	//ADMIN
 	public final static String ADMIN_INDEX = "admin/index";
@@ -21,6 +22,7 @@ public class ViewRouteHelper {
 	public final static String EVENT_INDEX = "event/index";
 	public final static String EVENT_SAVE = "event/save";
 	public final static String REDIRECT_EVENTS_CRUD = "redirect:/events";
+	public final static String EVENT_DAYS = "event/event-days/list";
 	
 	//REGISTRO
 	public final static String REGISTRO_EXITO = "registro/exito";
@@ -29,6 +31,11 @@ public class ViewRouteHelper {
 	public final static String REGISTRO_NOTFOUND = "registro/notfound";
 	public final static String REGISTRO_ERROR = "registro/error";
 	public final static String REGISTRO_MAIL_IN_USE = "registro/mail_in_use";
+
+	//FEEDBACK
+	public final static String FEEDBACK_INDEX = "feedback/index";
+	public final static String FEEDBACK_NOTFOUND = "feedback/notfound";
+	public final static String FEEDBACK_EXITO = "feedback/exito";
 	
 	//QR
 	public final static String QR_RESULT = "qr/result";

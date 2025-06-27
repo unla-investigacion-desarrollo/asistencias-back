@@ -33,4 +33,9 @@ public class HomeController {
 		}
 		return modelAndView;
 	}
+
+	@GetMapping("/sobre-nosotros")
+	public String sobreNosotros() {
+		return ViewRouteHelper.ABOUT_US;
+	}
 }

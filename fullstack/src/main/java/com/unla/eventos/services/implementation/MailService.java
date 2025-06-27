@@ -6,6 +6,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -79,4 +80,50 @@ public class MailService implements IMailService {
             throw new MessagingException(e.getMessage());
         }
     }
+
+    @Override
+    public void sendCertificate(String toUser, String subject, Map<String, Object> message, byte[] qrCodeBytes)
+            throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try{
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setTo(toUser);
+            mimeMessageHelper.setSubject(subject);
+
+            Context context = new Context();
+            context.setVariables(message);
+
+            String htmlContent = templateEngine.process(MailConfigHelper.TEMPLATE_CERTIFICADO, context);
+            mimeMessageHelper.setText(htmlContent,true);
+
+            ClassPathResource resource = new ClassPathResource("/static/images/logo.png");
+            mimeMessageHelper.addInline("logoImage", resource);
+
+            // Adjuntar el Certificado
+            ByteArrayResource qrCodeResource = new ByteArrayResource(qrCodeBytes);
+            mimeMessageHelper.addAttachment("certificate.png", qrCodeResource);
+            
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("ERROR en el envio de mail");
+            throw new MessagingException(e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendEncuesta(String toUser, String subject, String messageText) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setTo(toUser);
+            helper.setSubject(subject);
+            helper.setText(messageText, false);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("ERROR en el envío de encuesta a {}", toUser, e);
+            throw new RuntimeException("Error al enviar encuesta", e);
+        }
+    }
+
 }

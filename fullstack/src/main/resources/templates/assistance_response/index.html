@@ -115,7 +115,14 @@
 							                <td th:text="${response.email}"></td>
 							                <td th:text="${response.QRCode}"></td>
 											<td th:text="${response.welcomeMailSent}"></td>
-							                <td th:text="${response.isPresent}"></td>
+                                            <td>
+                                                <ul th:each="day : ${assistanceDaysMap[response.id]}">
+                                                    <li>
+                                                        Día: <span th:text="${#temporals.format(day.eventDay.date, 'dd/MM/yyyy')}"></span>,
+                                                        Presente: <span th:text="${day.present ? 'Sí' : 'No'}"></span>
+                                                    </li>
+                                                </ul>
+                                            </td>
 							                <td th:text="${response.isAssistanceCertifySent}"></td>
 							            </tr>
                                     </tbody>
@@ -167,7 +174,10 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; UNLa labs 2024</span>
+                        <span>
+                            Copyright &copy; UNLa labs 2024 |
+                            <a href="/eventos/sobre-nosotros" style="text-decoration: none;">Sobre nosotros</a>
+                        </span>
                     </div>
                 </div>
             </footer>

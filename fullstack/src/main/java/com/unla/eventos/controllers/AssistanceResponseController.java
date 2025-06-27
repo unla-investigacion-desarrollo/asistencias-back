@@ -1,6 +1,8 @@
 package com.unla.eventos.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.core.io.Resource;
 
+import com.unla.eventos.entities.AssistanceDays;
 import com.unla.eventos.entities.AssistanceResponse;
+import com.unla.eventos.services.IAssistanceDaysService;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.implementation.ExcelExportService;
 import com.unla.eventos.helpers.ViewRouteHelper;
@@ -32,11 +36,20 @@ public class AssistanceResponseController {
 	
 	@Autowired
     private ExcelExportService excelExportService;
+
+    @Autowired
+    private IAssistanceDaysService assistanceDaysService;
 	
 	@GetMapping("/list/{eventId}")
     public String viewEventResponses(@PathVariable int eventId, Model model) {
         List<AssistanceResponse> responses = assistanceResponseService.findByEventId(eventId);
+        Map<Integer, List<AssistanceDays>> assistanceDaysMap = new HashMap<>();
+        for (AssistanceResponse response : responses) {
+            List<AssistanceDays> days = assistanceDaysService.findByAssistanceResponseId(response.getId());
+            assistanceDaysMap.put(response.getId(), days);
+        }
         model.addAttribute("responses", responses);
+        model.addAttribute("assistanceDaysMap", assistanceDaysMap);
         return ViewRouteHelper.ASSISTANCE_RESPONSE_INDEX;
     }
 	

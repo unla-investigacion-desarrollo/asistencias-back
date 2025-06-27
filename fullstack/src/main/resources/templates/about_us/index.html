@@ -7,7 +7,6 @@
     <meta name="description" content="">
     <meta name="author" content="UNLa labs">
     <title>Eventos UNLa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="/eventos/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -24,10 +23,18 @@
                 <div class="sidebar-brand-text mx-3">UNLa eventos</div>
             </a>
             <hr class="sidebar-divider my-0">
+            <hr class="sidebar-divider">
             <li class="nav-item">
-                <a class="nav-link" href="/eventos/">
+                <a class="nav-link" href="events">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Inicio</span>
+                    <span>Eventos</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link" href="admin">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Usuarios</span>
                 </a>
             </li>
             <hr class="sidebar-divider">
@@ -50,37 +57,47 @@
 					</form>
                 </nav>
                 <div class="container-fluid">
-                    <h1>Crear Usuario</h1>
-				    <form th:action="@{/admin/create}" th:object="${user}" method="post">
-				        <div>
-				            <label for="username" style="width: 12%;">Nombre de Usuario:</label>
-				            <input type="text" style="width: 25%;" id="username" th:field="*{username}" required />
-				        </div>
-				        <div>
-				            <label for="password" style="width: 12%;">Contraseña:</label>
-				            <input type="password" style="width: 25%;" id="password" th:field="*{password}" required />
-				        </div>
-				        <div class="form-group">
-                            <label for="role" style="width: 12%;">Rol:</label>
-                            <select id="role" style="width: 12%;" name="role" required class="form-control">
-                                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
-                            </select>
+                
+                    <h1 class="h3 mb-4 text-gray-800 text-center">Sobre nosotros</h1>
+                    <p class="text-center mb-5">Este sistema fue desarrollado por el equipo de <strong>UNLa Labs</strong>.</p>
+                
+                    <div class="row justify-content-center">
+                        <!-- Integrante 1 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow h-100 text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-user fa-2x text-primary mb-3"></i>
+                                    <h5 class="card-title">Gustavo Hernan Siciliano</h5>
+                                    <a href="https://www.linkedin.com/in/gustavo-hernan-siciliano/" target="_blank"
+                                        class="btn btn-outline-primary btn-sm">
+                                        <i class="fab fa-linkedin"></i> LinkedIn
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-				        <div>
-							<br/>
-				            <button type="submit">Crear</button>
-				        </div>
-				    </form>
-					<br/>
-				    <a th:href="@{/admin}">Volver a la Lista de Usuarios</a>
-	            </div>
-	         </div>
+                
+                        <!-- Integrante 2 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow h-100 text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-user fa-2x text-primary mb-3"></i>
+                                    <h5 class="card-title">Julian Santiago Tomczak</h5>
+                                    <a href="https://www.linkedin.com/in/julian-santiago-tomczak-536bb4241/" target="_blank"
+                                        class="btn btn-outline-primary btn-sm">
+                                        <i class="fab fa-linkedin"></i> LinkedIn
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>
-                            Copyright &copy; UNLa labs 2024 |
-                            <a href="/eventos/sobre-nosotros" style="text-decoration: none;">Sobre nosotros</a>
+                            Copyright &copy; UNLa labs 2024
                         </span>
                     </div>
                 </div>
