@@ -3,6 +3,7 @@ package com.unla.eventos.helpers;
 public class ViewRouteHelper {
 	//HOME
 	public final static String INDEX = "home/index";
+	public final static String ABOUT_US = "about_us/index";
 	
 	//ADMIN
 	public final static String ADMIN_INDEX = "admin/index";
