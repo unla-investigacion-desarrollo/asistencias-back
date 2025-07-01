@@ -28,19 +28,20 @@
   </div>
   <div class="content">
     <p class="header">
-      ¡Felicitaciones!
+      ¡Felicidades, tu inscripción se ha completado con éxito!
     </p>
     <p>
-       Se confirma que tu inscripción se procesó correctamente.
+       Te confirmamos que tu inscripción para el evento <span th:text="${eventName}"></span> ha sido procesada correctamente.
     </p>
     <p>
-       En este mail se adjunta una imagen con el QR para garantizar tu acceso al evento.
+       Adjunto a este correo encontrarás una imagen con tu código QR, el cual deberás presentar el día del evento para poder ingresar.
     </p>
     <p>
-       Asegurate de guardar bien este mail, o de guardar la imagen del QR, ya que la deberás presentar el día del evento.
+      <img src="https://fonts.gstatic.com/s/e/notoemoji/16.0/1f4cc/32.png" alt="📌" style="width: 16px; vertical-align: middle;"> Importante:
     </p>
     <p>
-       Importante. Este QR es único e instransferible, no lo compartas con terceros.
+      Este QR es único e intransferible. Te recomendamos guardar este correo o descargar la imagen del QR en tu dispositivo
+      móvil. No lo compartas con terceros.
     </p>
     <br>
     <p>
@@ -53,7 +54,7 @@
       <br/>
       Fecha inicio: <span th:text="${eventStartDate}"></span>
       <br/>
-      Fecha finalziación: <span th:text="${eventEndDate}"></span>
+      Fecha finalización: <span th:text="${eventEndDate}"></span>
     </p>
     <br>
     <p th:if="${mailContact}">
@@ -67,6 +68,7 @@
       Universidad Nacional de Lanús <br/>
       <a href="https://www.unla.edu.ar/">UNLa Sitio Web</a>
     </p>
+    <p>Desarrollado por UNLa Labs Sistemas</p>
   </div>
 </body>
 </html>
