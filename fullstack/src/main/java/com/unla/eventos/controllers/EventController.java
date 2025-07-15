@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -39,6 +40,9 @@ import javax.imageio.ImageIO;
 @Controller
 @RequestMapping("/events")
 public class EventController {
+
+    @Value("${PUBLIC_QR_LINK_SERVER}")
+    private String PUBLIC_QR_LINK_SERVER;
 
     @Autowired
     private IEventService eventService;
@@ -179,11 +183,12 @@ public class EventController {
 
                 if (asistioAlMenosUnDia) {
                     // Armar asunto y cuerpo
+                    String usrServer = PUBLIC_QR_LINK_SERVER.replace("/qr/", "/feedback/");
                     String subject = "Encuesta de satisfacción - " + event.getName();
                     String body = "Hola " + asistente.getName() + ",\n\n" +
                             "Gracias por asistir al evento \"" + event.getName() + "\".\n" +
                             "Por favor, completá la encuesta en el siguiente enlace:\n\n" +
-                            "http://localhost:8080/eventos/feedback/" + uniqueCode + "\n\n" +
+                            usrServer + uniqueCode + "\n\n" +
                             "¡Muchas gracias!\n\nUniversidad Nacional de Lanús";
 
                     mailService.sendEncuesta(asistente.getEmail(), subject, body);
