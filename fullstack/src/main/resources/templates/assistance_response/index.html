@@ -52,6 +52,23 @@
           align-items: center;
           justify-content: center;
         }
+        .asistencia-detalle {
+            display: none;
+            margin-top: 8px;
+        }
+        .asistencia-toggle {
+            cursor: pointer;
+            color: #007bff;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 0.9em;
+        }
+        .table td {
+            vertical-align: top;
+            max-height: 60px;
+            overflow: hidden;
+        }
 	</style>
 </head>
 <body id="page-top">
@@ -116,12 +133,22 @@
 							                <td th:text="${response.QRCode}"></td>
 											<td th:text="${response.welcomeMailSent}"></td>
                                             <td>
-                                                <ul th:each="day : ${assistanceDaysMap[response.id]}">
-                                                    <li>
-                                                        Día: <span th:text="${#temporals.format(day.eventDay.date, 'dd/MM/yyyy')}"></span>,
-                                                        Presente: <span th:text="${day.present ? 'Sí' : 'No'}"></span>
-                                                    </li>
-                                                </ul>
+                                                <div>
+                                                    <span th:text="${#lists.size(assistanceDaysMap[response.id])} + ' asistencia(s)'"></span>
+                                                </div>
+                                                <button type="button"
+                                                        class="asistencia-toggle"
+                                                        th:attr="onclick='toggleDetalle(' + ${response.id} + ')'" >
+                                                    Ver detalles
+                                                </button>
+                                                <div class="asistencia-detalle" th:attr="id='asistencia-detalle-' + ${response.id}">
+                                                    <ul class="mb-0" th:each="day : ${assistanceDaysMap[response.id]}">
+                                                        <li>
+                                                            Día: <span th:text="${#temporals.format(day.eventDay.date, 'dd/MM/yyyy')}"></span>,
+                                                            Presente: <span th:text="${day.present ? 'Sí' : 'No'}"></span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
 							                <td th:text="${response.isAssistanceCertifySent}"></td>
 							            </tr>
@@ -199,6 +226,15 @@
             importFromExcelDiv.style.display = 'block';
 	    };
 		document.getElementById('show-import-from-excel').addEventListener('click', showImportFromExcel);
+        
+        function toggleDetalle(id) {
+            const detalle = document.getElementById('asistencia-detalle-' + id);
+            if (detalle.style.display === 'none' || detalle.style.display === '') {
+                detalle.style.display = 'block';
+            } else {
+                detalle.style.display = 'none';
+            }
+        }
 	</script>
     <script src="/eventos/vendor/jquery/jquery.min.js"></script>
     <script src="/eventos/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
