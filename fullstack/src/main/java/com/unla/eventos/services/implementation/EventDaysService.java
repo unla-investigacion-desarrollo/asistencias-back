@@ -9,8 +9,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.unla.eventos.entities.AssistanceDays;
 import com.unla.eventos.entities.Event;
 import com.unla.eventos.entities.EventDays;
+import com.unla.eventos.repositories.IAssistanceDaysRepository;
 import com.unla.eventos.repositories.IEventDaysRepository;
 import com.unla.eventos.services.IEventDaysService;
 
@@ -19,6 +21,9 @@ public class EventDaysService implements IEventDaysService {
 
     @Autowired
     private IEventDaysRepository eventDaysRepository;
+
+    @Autowired
+    private IAssistanceDaysRepository assistanceDaysRepository;
 
     @Override
     public List<EventDays> findByEventId(int eventId) {
@@ -32,12 +37,17 @@ public class EventDaysService implements IEventDaysService {
 
     @Override
     public List<EventDays> save(Event event) {
-        LocalDate hoy = LocalDate.now();
         List<EventDays> existentes = eventDaysRepository.findByEventId(event.getId());
         if (existentes.isEmpty()) {
             return generarYGuardar(event);
         }
 
+        List<AssistanceDays> assistanceDays = assistanceDaysRepository.findByEventDayId(event.getId());
+        if (!assistanceDays.isEmpty()) {
+            return existentes;
+        }
+
+        LocalDate hoy = LocalDate.now();
         LocalDate inicioExistente = existentes.stream()
             .map(EventDays::getDate)
             .min(LocalDate::compareTo)
