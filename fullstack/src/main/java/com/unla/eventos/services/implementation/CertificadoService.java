@@ -8,10 +8,16 @@ import java.util.Map;
 import java.io.ByteArrayOutputStream;
 
 import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -88,58 +94,50 @@ public class CertificadoService implements ICertificadoService {
         return enviados;
     }
 
-    public byte[] generarCertificadoPdf(String nombre, String apellido, String dni)
-            throws IOException {
 
+    public byte[] generarCertificadoPdf(String nombre, String apellido, String dni) throws IOException {
         InputStream is = new ClassPathResource("static/plantillas/certificado.pdf").getInputStream();
         byte[] pdfBytes = is.readAllBytes();
         PDDocument document = Loader.loadPDF(pdfBytes);
-        PDPage page = document.getPage(0);
 
-        PDType0Font font = PDType0Font.load(document,
-                new ClassPathResource("static/fonts/FranklinGothicBook.ttf").getInputStream());
-        int fontSize = 30;
-        float pageWidth = page.getMediaBox().getWidth();
+        PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
 
-        String nombreCompleto = nombre + " " + apellido + " DNI " + dni;
-        float textWidth = (font.getStringWidth(nombreCompleto) / 1000) * fontSize;
+        if (acroForm != null) {
+            PDField campo = acroForm.getField("Text1");
+            if (campo == null && !acroForm.getFields().isEmpty()) {
+                campo = acroForm.getFields().get(0);
+            }
 
-        PDPageContentStream contentStream = new PDPageContentStream(document, page,
-                PDPageContentStream.AppendMode.APPEND, true);
-        contentStream.setFont(font, fontSize);
+            if (campo != null) {
+                String nombreCompleto = nombre + " " + apellido + " DNI " + dni;
 
-        if (textWidth < pageWidth - 200) {
-            // Cabe en una línea
-            float startX = (pageWidth - textWidth) / 2;
-            float y = 275;
-            contentStream.beginText();
-            contentStream.newLineAtOffset(startX, y);
-            contentStream.showText(nombreCompleto);
-            contentStream.endText();
-        } else {
-            // Dividido en 2 líneas (nombre y apellido)
-            float nombreWidth = (font.getStringWidth(nombre) / 1000) * fontSize;
-            float startXNombre = (pageWidth - nombreWidth) / 2;
-            float yNombre = 285;
+                PDFont font = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
 
-            contentStream.beginText();
-            contentStream.newLineAtOffset(startXNombre, yNombre);
-            contentStream.showText(nombre);
-            contentStream.endText();
+                PDRectangle rect = campo.getWidgets().get(0).getRectangle();
+                float fieldWidth = rect.getWidth() - 10;
+                float fontSize = 30f;
+                float textWidth = (font.getStringWidth(nombreCompleto) / 1000) * fontSize;
 
-            // Segunda línea: apellido + DNI
-            String apellidoConDni = apellido + " DNI " + dni;
-            float apellidoWidth = (font.getStringWidth(apellidoConDni) / 1000) * fontSize;
-            float startXApellido = (pageWidth - apellidoWidth) / 2;
-            float yApellido = 255;
+                while (textWidth > fieldWidth && fontSize > 8) {
+                    fontSize -= 0.5f;
+                    textWidth = (font.getStringWidth(nombreCompleto) / 1000) * fontSize;
+                }
 
-            contentStream.beginText();
-            contentStream.newLineAtOffset(startXApellido, yApellido);
-            contentStream.showText(apellidoConDni);
-            contentStream.endText();
+                PDResources dr = acroForm.getDefaultResources();
+                if (dr == null) {
+                    dr = new PDResources();
+                    acroForm.setDefaultResources(dr);
+                }
+
+                COSName fontName = dr.add(font);
+
+                String daString = "/" + fontName.getName() + " " + fontSize + " Tf 0 g";
+                ((PDVariableText) campo).setDefaultAppearance(daString);
+
+                campo.setValue(nombreCompleto);
+                acroForm.flatten();
+            }
         }
-
-        contentStream.close();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         document.save(baos);
