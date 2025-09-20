@@ -2,6 +2,7 @@ package com.unla.eventos.services.implementation;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 
 import com.unla.eventos.entities.AssistanceDays;
 import com.unla.eventos.entities.AssistanceResponse;
+import com.unla.eventos.entities.CertificateErrorLog;
 import com.unla.eventos.helpers.FunctionsHelper;
+import com.unla.eventos.repositories.ICertificateErrorLogRepository;
 import com.unla.eventos.services.IAssistanceDaysService;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.ICertificadoService;
@@ -43,6 +46,9 @@ public class CertificadoService implements ICertificadoService {
 
     @Autowired
     private IMailService mailService;
+
+    @Autowired
+    private ICertificateErrorLogRepository errorLogRepository;
 
     @Override
     public int enviarCertificados(int eventId, int maxAEnviar) throws MessagingException {
@@ -88,12 +94,18 @@ public class CertificadoService implements ICertificadoService {
             } catch (IOException e) {
                 System.err.println("Error generando o enviando certificado a " + asistente.getEmail());
                 e.printStackTrace();
+                CertificateErrorLog log = new CertificateErrorLog();
+                log.setEmail(asistente.getEmail());
+                log.setNombreCompleto(asistente.getName() + " " + asistente.getLastName());
+                log.setDocumento(asistente.getDocumentNumber());
+                log.setMensajeError(e.getMessage());
+                log.setFecha(LocalDateTime.now());
+                errorLogRepository.save(log);
             }
         }
 
         return enviados;
     }
-
 
     public byte[] generarCertificadoPdf(String nombre, String apellido, String dni) throws IOException {
         InputStream is = new ClassPathResource("static/plantillas/certificado.pdf").getInputStream();
