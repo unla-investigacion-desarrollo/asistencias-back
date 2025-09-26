@@ -1,259 +1,365 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Encuesta de Satisfacción - UNLa</title>
-    <link href="/eventos/css/registro.css" rel="stylesheet" type="text/css">
-     <style>		
-		@-webkit-keyframes spinner-border {
-		  to {
-		    -webkit-transform: rotate(360deg);
-		    transform: rotate(360deg);
-		  }
-		}
-		@keyframes spinner-border {
-		  to {
-		    -webkit-transform: rotate(360deg);
-		    transform: rotate(360deg);
-		  }
-		}
-		.spinner-border {
-		  display: inline-block;
-		  width: 2rem;
-		  height: 2rem;
-		  vertical-align: text-bottom;
-		  border: 0.25em solid currentColor;
-		  border-right-color: transparent;
-		  border-radius: 50%;
-		  -webkit-animation: spinner-border .75s linear infinite;
-		  animation: spinner-border .75s linear infinite;
-		  color: #007bff !important;
-          width: 3rem;
-          height: 3rem;
-          margin: 10px;
-		}
-        .disabled-button {
-          background-color: grey!important;
-          cursor: not-allowed!important;
-        }
-        .spinner-box {
-          display: none;
-        }
-        .spinner-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-	</style>
-  </head>
-  <body>
-    <section class="container">
-      <header>
-        <div class="titulo-container">
-          <img src="https://www.unla.edu.ar/images/logo_web.jpg" />
-          <h2>Formulario de feedback</h2>
-        </div>
-      </header>
-      <h1 style="margin-top: 1rem; margin-bottom: 1rem;" th:text="'Encuesta de Satisfacción de la ' + ${eventName}"></h1>
-      
-      <p style="margin-bottom: 1rem;">
-        Estimado/a participante:
-      </p>
-      <p
-        th:text="'Agradecemos tu participación en la ' + ${eventName} + '. Para ayudarnos a mejorar futuros eventos, te pedimos que completes esta encuesta sobre tu experiencia. Tu opinión es muy valiosa para nosotros.'">
-      </p>
-      <form class="form" th:action="@{/feedback/submit}" method="post" th:object="${feedbackResponse}" onsubmit="showLoading()">
-        <h3 style="margin-top: 1.5rem;">1. Información General</h3>
-        <div class="input-box">
-          <label>Correo electrónico:</label>
-          <input th:field="*{email}" type="email" required />
-        </div>
 
-        <div class="input-box">
-          <label>¿Cuál es tu edad?</label>
-          <input th:field="*{edad}" type="number" min="10" max="100" required />
-        </div>
-
-        <div class="input-box">
-          <label>Indica tu rol actual:</label>
-          <select th:field="*{rol}" required>
-            <option value="">Seleccione</option>
-            <option value="Estudiante de grado">Estudiante de grado</option>
-            <option value="Estudiante de posgrado">Estudiante de posgrado</option>
-            <option value="Docente- Investigador interno">Docente- Investigador interno</option>
-            <option value="Docente- Investigador externo">Docente- Investigador externo</option>
-            <option value="No docente">No docente</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cuál es tu área de estudio o profesión?</label>
-          <input th:field="*{areaEstudio}" type="text" />
-        </div>
-
-        <div style="margin-bottom: 1.5rem;">
-          <label for="comentario" style="margin-top: 1rem; display: block; margin-bottom: 0.5rem;">
-            Deja algún comentario que consideres pertinente al respecto de la metodología de acreditación desarrollada por el
-            área de sistemas del departamento:
-          </label>
-          <textarea th:field="*{comentario}" id="comentario" rows="3"
-            style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-        </div>
-
-        <!-- Calificaciones -->
-        <h3 style="margin-top: 1.5rem;">2. Evaluación de la Jornada</h3>
-        <div class="input-box">
-          <label>¿Cómo calificarías el proceso de registro y recepción al evento?</label>
-          <select th:field="*{calificacionRegistro}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo calificarías la organización general de la jornada?</label>
-          <select th:field="*{calificacionOrganizacion}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo calificarías la calidad de las presentaciones?</label>
-          <select th:field="*{calificacionPresentaciones}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Qué te pareció la duración de las sesiones y la jornada en general?</label>
-          <select th:field="*{calificacionDuracion}" required>
-            <option value="">Seleccione</option>
-            <option value="Adecuada">Adecuada</option>
-            <option value="Un poco larga">Un poco larga</option>
-            <option value="Un poco corta">Un poco corta</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo calificarías la claridad y relevancia de la información presentada?</label>
-          <select th:field="*{calificacionClaridad}" required>
-            <option value="">Seleccione</option>
-            <option value="Muy clara y relevante">Muy clara y relevante</option>
-            <option value="Clara y relevante">Clara y relevante</option>
-            <option value="Neutral">Neutral</option>
-            <option value="Poco clara o relevante">Poco clara o relevante</option>
-            <option value="Confusa e irrelevante">Confusa e irrelevante</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo calificarías el nivel de interacción y participación permitido en las sesiones?</label>
-          <select th:field="*{calificacionInteraccion}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo calificarías las instalaciones donde se llevó a cabo el evento?</label>
-          <select th:field="*{calificacionInstalaciones}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cómo evalúas la calidad de los recursos audiovisuales y técnicos utilizados durante el evento?</label>
-          <select th:field="*{calificacionRecursos}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Mala">Mala</option>
-          </select>
-        </div>
-
-        <div class="input-box">
-          <label>¿Cual es tu opinión respecto al servicio del coffee break de la planta piloto de panificados?</label>
-          <select th:field="*{calificacionBreak}" required>
-            <option value="">Seleccione</option>
-            <option value="Excelente">Excelente</option>
-            <option value="Muy buena">Muy buena</option>
-            <option value="Buena">Buena</option>
-            <option value="Regular">Regular</option>
-            <option value="Podría mejorar">Podría mejorar</option>
-          </select>
-        </div>
-
-        <!-- Opiniones abiertas -->
-        <h3 style="margin-top: 1.5rem;">3. Sugerencias y comentarios</h3>
-        <div style="margin-bottom: 1.5rem;">
-          <label for="aspectosPositivos" style="margin-top: 1rem; display: block; margin-bottom: 0.5rem;">
-            ¿Qué aspectos te gustaron más de la jornada?
-          </label>
-          <textarea th:field="*{aspectosPositivos}" id="aspectosPositivos" rows="3"
-            style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <label for="aspectosAMejorar" style="display: block; margin-bottom: 0.5rem;">
-            ¿Qué aspectos crees que podrían mejorarse?
-          </label>
-          <textarea th:field="*{aspectosAMejorar}" id="aspectosAMejorar" rows="3"
-            style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <label for="sugerenciaEspecifica" style="display: block; margin-bottom: 0.5rem;">
-            ¿Tenés alguna sugerencia específica para futuras jornadas o eventos?
-          </label>
-          <textarea th:field="*{sugerenciaEspecifica}" id="sugerenciaEspecifica" rows="3"
-            style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
-        </div>
-
-        <input type="hidden" name="uniqueCode" th:value="${uniqueCode}" />
-
-        <button type="submit" id="submitButton">Enviar feedback</button>
-        <div class="spinner-box" id="loadingSpinner" style="display: none;">
-          <div class="spinner-container">
-            <div class="spinner-border"></div>
-            <span>Procesando...</span>
-          </div>
-        </div>
-      </form>
-    </section>
-    <script>
-      function showLoading() {
-        const button = document.getElementById('submitButton');
-        button.disabled = true;
-        button.classList.add('disabled-button');
-        document.getElementById('loadingSpinner').style.display = 'block';
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encuesta de Satisfacción - UNLa</title>
+  <link href="/eventos/css/registro.css" rel="stylesheet" type="text/css">
+  <style>
+    @-webkit-keyframes spinner-border {
+      to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
       }
-    </script>
-  </body>
+    }
+
+    @keyframes spinner-border {
+      to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner-border {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      vertical-align: text-bottom;
+      border: 0.25em solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      -webkit-animation: spinner-border .75s linear infinite;
+      animation: spinner-border .75s linear infinite;
+      color: #007bff !important;
+      width: 3rem;
+      height: 3rem;
+      margin: 10px;
+    }
+
+    .disabled-button {
+      background-color: grey !important;
+      cursor: not-allowed !important;
+    }
+
+    .spinner-box {
+      display: none;
+    }
+
+    .spinner-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Estilos para hacer los radio buttons y checkboxes más pequeños */
+    .input-box input[type="radio"],
+    .input-box input[type="checkbox"] {
+      width: 16px !important;
+      height: 16px !important;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .input-box label {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    /* Estilo específico para el campo "Otro" */
+    .input-box label:has(input[value="Otro"]) {
+      display: block;
+      margin-top: 5px;
+    }
+
+    .input-box label:has(input[value="Otro"]) input[type="text"] {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+
+    /* Lo mismo para los checkboxes de participación */
+    .input-box label:has(input[value="otro"]) {
+      display: block;
+      margin-top: 5px;
+    }
+
+    .input-box label:has(input[value="otro"]) input[type="text"] {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="container">
+    <header>
+      <div class="titulo-container">
+        <img src="/eventos/images/DDPyT.jpg" />
+      </div>
+    </header>
+    <h1 style="margin-top: 1rem; margin-bottom: 1rem;" th:text="'Encuesta de Satisfacción de la ' + ${eventName}"></h1>
+
+    <p style="margin-bottom: 1rem;">
+      Estimado/a participante:
+    </p>
+    <p
+      th:text="'Agradecemos tu participación en la ' + ${eventName} + '. Para ayudarnos a mejorar futuros eventos, te pedimos que completes esta encuesta sobre tu experiencia. Tu opinión es muy valiosa para nosotros.'">
+    </p>
+    <form class="form" th:action="@{/feedback/submit}" method="post" th:object="${feedbackResponse}"
+      onsubmit="showLoading()">
+      <h3 style="margin-top: 1.5rem;">1. Información General</h3>
+      <div class="input-box">
+        <label>Correo electrónico:</label>
+        <input th:field="*{email}" type="email" required />
+      </div>
+
+      <div class="input-box">
+        <label>¿Cuál es tu edad?</label>
+        <input th:field="*{edad}" type="number" min="10" max="100" required />
+      </div>
+
+      <div class="input-box">
+        <label>Indica tu rol actual: </label>
+        <div>
+          <label><input type="radio" th:field="*{rol}" value="Estudiante de grado" required> Estudiante de
+            grado</label><br>
+          <label><input type="radio" th:field="*{rol}" value="Estudiante de posgrado"> Estudiante de
+            posgrado</label><br>
+          <label><input type="radio" th:field="*{rol}" value="Docente- Investigador interno"> Docente- Investigador
+            interno</label><br>
+          <label><input type="radio" th:field="*{rol}" value="Docente- Investigador externo"> Docente- Investigador
+            externo</label><br>
+          <label><input type="radio" th:field="*{rol}" value="No docente"> No docente</label><br>
+          <label>
+            <input type="radio" th:field="*{rol}" value="Otro"> Otros:
+            <input th:field="*{rol}" type="text" placeholder="Especifica tu rol" />
+          </label>
+        </div>
+      </div>
+
+
+      <div class="input-box">
+        <label>¿Cuál es tu área de estudio o profesión?</label>
+        <input th:field="*{areaEstudio}" type="text" />
+      </div>
+
+      <div class="input-box">
+        <label>¿Participaste en otras ediciones de la jornada?</label>
+        <div>
+          <label><input type="checkbox" class="participacion" value="1">Participe de la 1° Jornada</label><br>
+          <label><input type="checkbox" class="participacion" value="2">Participe de la 2° Jornada</label><br>
+          <label><input type="checkbox" class="participacion" value="3">Participe de la 3° Jornada</label><br>
+          <label><input type="checkbox" class="participacion" value="ninguna"> No participe en ninguna jornada anterior</label><br>
+          <label>
+            <input type="checkbox" id="otrosCheckbox" value="otros"> Otros:
+            <input type="text" id="otrosText" placeholder="Especifica otra edición" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Input hidden que enviará el string concatenado -->
+      <input type="hidden" name="participacionEdiciones" id="participacionEdicionesHidden">
+
+      <!-- Calificaciones -->
+      <h3 style="margin-top: 1.5rem;">2. Evaluación de la Jornada</h3>
+      <div class="input-box">
+        <label>¿Cómo calificarías el proceso de registro y recepción al evento?</label>
+        <select th:field="*{calificacionRegistro}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Mala">Mala</option>
+          <option value="Muy Mala">Muy Mala</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="comentario" style="margin-top: 1rem; display: block; margin-bottom: 0.5rem;">
+          Deja algún comentario que consideres pertinente al respecto de la metodología de acreditación desarrollada por
+          el
+          área de sistemas del departamento:
+        </label>
+        <textarea th:field="*{comentario}" id="comentario" rows="3"
+          style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cómo calificarías la organización general de la jornada?</label>
+        <select th:field="*{calificacionOrganizacion}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Mala">Mala</option>
+          <option value="Muy Mala">Muy Mala</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cómo calificarías la calidad de las presentaciones?</label>
+        <select th:field="*{calificacionPresentaciones}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Mala">Mala</option>
+          <option value="Muy Mala">Muy Mala</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Qué te pareció la duración de las sesiones y la jornada en general?</label>
+        <select th:field="*{calificacionDuracion}" required>
+          <option value="">Seleccione</option>
+          <option value="Adecuada">Adecuada</option>
+          <option value="Un poco larga">Un poco larga</option>
+          <option value="Un poco corta">Un poco corta</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cómo calificarías la claridad y relevancia de la información presentada?</label>
+        <select th:field="*{calificacionClaridad}" required>
+          <option value="">Seleccione</option>
+          <option value="Muy clara y relevante">Muy clara y relevante</option>
+          <option value="Clara y relevante">Clara y relevante</option>
+          <option value="Neutral">Neutral</option>
+          <option value="Poco clara o relevante">Poco clara o relevante</option>
+          <option value="Confusa e irrelevante">Confusa e irrelevante</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cómo calificarías el nivel de interacción y participación permitido en las sesiones?</label>
+        <select th:field="*{calificacionInteraccion}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Mala">Mala</option>
+          <option value="Muy Mala">Muy Mala</option>
+        </select>
+      </div>
+
+      <!-- Calificaciones Instalaciones-->
+      <div class="input-box">
+        <label>¿Cómo calificarías las instalaciones donde se llevó a cabo el evento?</label>
+        <select th:field="*{calificacionInstalaciones}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buenas">Muy buenas</option>
+          <option value="Buenas">Buenas</option>
+          <option value="Regulares">Regulares</option>
+          <option value="Malas">Malas</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cómo evalúas la calidad de los recursos audiovisuales y técnicos utilizados durante el evento?</label>
+        <select th:field="*{calificacionRecursos}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Buena">Buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Mala">Mala</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <label>¿Cual es tu opinión respecto al servicio del coffee break de la planta piloto de panificados?</label>
+        <select th:field="*{calificacionBreak}" required>
+          <option value="">Seleccione</option>
+          <option value="Excelente">Excelente</option>
+          <option value="Muy buena">Muy buena</option>
+          <option value="Buena">Buena</option>
+          <option value="Regular">Regular</option>
+          <option value="Podría mejorar">Podría mejorar</option>
+        </select>
+      </div>
+
+      <!-- Opiniones abiertas -->
+      <h3 style="margin-top: 1.5rem;">3. Sugerencias y comentarios</h3>
+      <div style="margin-bottom: 1.5rem;">
+        <label for="aspectosPositivos" style="margin-top: 1rem; display: block; margin-bottom: 0.5rem;">
+          ¿Qué aspectos te gustaron más de la jornada?
+        </label>
+        <textarea th:field="*{aspectosPositivos}" id="aspectosPositivos" rows="3"
+          style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="aspectosAMejorar" style="display: block; margin-bottom: 0.5rem;">
+          ¿Qué aspectos crees que podrían mejorarse?
+        </label>
+        <textarea th:field="*{aspectosAMejorar}" id="aspectosAMejorar" rows="3"
+          style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="sugerenciaEspecifica" style="display: block; margin-bottom: 0.5rem;">
+          ¿Tenés alguna sugerencia específica para futuras jornadas o eventos?
+        </label>
+        <textarea th:field="*{sugerenciaEspecifica}" id="sugerenciaEspecifica" rows="3"
+          style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+      </div>
+
+      <h3 style="margin-top: 1.5rem;">¡Muchas gracias por tu participación,
+        por tus valiosas respuestas y por tu tiempo!</h3>
+      <p>
+        Te esperamos en la próxima jornada
+      </p>
+
+      <input type="hidden" name="uniqueCode" th:value="${uniqueCode}" />
+
+      <button type="submit" id="submitButton">Enviar feedback</button>
+      <div class="spinner-box" id="loadingSpinner" style="display: none;">
+        <div class="spinner-container">
+          <div class="spinner-border"></div>
+          <span>Procesando...</span>
+        </div>
+      </div>
+    </form>
+  </section>
+  <script>
+    function showLoading() {
+      const button = document.getElementById('submitButton');
+      button.disabled = true;
+      button.classList.add('disabled-button');
+      document.getElementById('loadingSpinner').style.display = 'block';
+    }
+
+     // Script para concatenar checkboxes de participación
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(e) {
+      const checkboxes = document.querySelectorAll('.participacion');
+      const otrosCheckbox = document.getElementById('otrosCheckbox');
+      const otrosText = document.getElementById('otrosText');
+
+      let seleccionadas = [];
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) seleccionadas.push(cb.value);
+      });
+
+      if (otrosCheckbox.checked && otrosText.value.trim() !== '') {
+        seleccionadas.push(otrosText.value.trim());
+      }
+
+      // Guardar todo en el input hidden antes de enviar
+      document.getElementById('participacionEdicionesHidden').value = seleccionadas.join(', ');
+    });
+  </script>
+</body>
+
 </html>

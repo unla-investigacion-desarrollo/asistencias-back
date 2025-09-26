@@ -29,6 +29,8 @@ public class FeedbackResponse {
     private String rol;
     
     private String areaEstudio;
+
+    private String participacionEdiciones;
     
     private String calificacionRegistro;
     
