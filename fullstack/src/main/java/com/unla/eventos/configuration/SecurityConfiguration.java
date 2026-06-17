@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 										"/vendor/*", "/vendor/jquery-easing/*", "/vendor/bootstrap/js/*",
 										"/vendor/jquery/*", "/vendor/fontawesome-free/css/*").permitAll();
 					auth.requestMatchers("/registro/*").permitAll();
-					auth.requestMatchers("/images/events/*").permitAll();
+					auth.requestMatchers("/feedback/*").permitAll();
 					auth.requestMatchers("/qr/*").permitAll();
 					auth.anyRequest().authenticated();
 				})

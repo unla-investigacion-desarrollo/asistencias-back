@@ -1,26 +1,33 @@
 package com.unla.eventos.services.implementation;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
 
-import javax.imageio.ImageIO;
-
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.RenderingHints;
-
 import com.unla.eventos.entities.AssistanceDays;
 import com.unla.eventos.entities.AssistanceResponse;
+import com.unla.eventos.entities.CertificateErrorLog;
 import com.unla.eventos.helpers.FunctionsHelper;
+import com.unla.eventos.repositories.ICertificateErrorLogRepository;
 import com.unla.eventos.services.IAssistanceDaysService;
 import com.unla.eventos.services.IAssistanceResponseService;
 import com.unla.eventos.services.ICertificadoService;
@@ -29,7 +36,7 @@ import com.unla.eventos.services.IMailService;
 import jakarta.mail.MessagingException;
 
 @Service
-public class CertificadoService implements ICertificadoService{
+public class CertificadoService implements ICertificadoService {
 
     @Autowired
     private IAssistanceDaysService assistanceDaysService;
@@ -38,7 +45,10 @@ public class CertificadoService implements ICertificadoService{
     private IAssistanceResponseService assistanceResponseService;
 
     @Autowired
-	private IMailService mailService;
+    private IMailService mailService;
+
+    @Autowired
+    private ICertificateErrorLogRepository errorLogRepository;
 
     @Override
     public int enviarCertificados(int eventId, int maxAEnviar) throws MessagingException {
@@ -46,55 +56,106 @@ public class CertificadoService implements ICertificadoService{
         List<AssistanceResponse> assistanceResponse = assistanceResponseService.findByEventIdWithEvent(eventId);
 
         for (AssistanceResponse asistente : assistanceResponse) {
-            if (enviados >= maxAEnviar) break;
-            List<AssistanceDays> dias = assistanceDaysService.findByAssistanceResponseId(asistente.getId());
+            if (enviados >= maxAEnviar)
+                break;
 
+            List<AssistanceDays> dias = assistanceDaysService.findByAssistanceResponseId(asistente.getId());
             boolean asistioAlMenosUnDia = dias.stream().anyMatch(AssistanceDays::isPresent);
 
-            if (!asistioAlMenosUnDia | asistente.isAssistanceCertifySent()) {
-                continue; // No asistió ningún día o el certificado ya se envio, no se envía certificado
-            }
-            
+            if (!asistioAlMenosUnDia || asistente.isAssistanceCertifySent())
+                continue;
+
             try {
-                byte[] certificado = generarCertificado(asistente);
-            
+                // Generar certificado PDF con nombre, apellido y DNI
+                byte[] certificado = generarCertificadoPdf(
+                        asistente.getName(),
+                        asistente.getLastName(),
+                        asistente.getDocumentNumber());
+
+                // Variables para el mail
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("nombre", asistente.getName() + " " + asistente.getLastName());
+                variables.put("nombre",
+                        asistente.getName() + " " + asistente.getLastName() + " DNI " + asistente.getDocumentNumber());
                 variables.put("fecha", FunctionsHelper.formatLocalDateToARGTime(asistente.getEvent().getStartDate()));
                 variables.put("caracter", asistente.getRolPrincipal());
 
-                mailService.sendCertificate(asistente.getEmail(), "Certificado de Asistencia", variables, certificado);
+                // Enviar mail
+                mailService.sendCertificate(
+                        asistente.getEmail(),
+                        "Certificado de Asistencia",
+                        variables,
+                        certificado);
+
+                // Marcar como enviado
                 asistente.setAssistanceCertifySent(true);
                 assistanceResponseService.save(asistente);
                 enviados++;
 
             } catch (IOException e) {
-                // Loguear error y continuar
                 System.err.println("Error generando o enviando certificado a " + asistente.getEmail());
                 e.printStackTrace();
+                CertificateErrorLog log = new CertificateErrorLog();
+                log.setEmail(asistente.getEmail());
+                log.setNombreCompleto(asistente.getName() + " " + asistente.getLastName());
+                log.setDocumento(asistente.getDocumentNumber());
+                log.setMensajeError(e.getMessage());
+                log.setFecha(LocalDateTime.now());
+                errorLogRepository.save(log);
             }
         }
+
         return enviados;
     }
 
-    private byte[] generarCertificado(AssistanceResponse assistanceResponse) throws IOException {
-        BufferedImage plantilla = ImageIO.read(new ClassPathResource("static/images/certificado.png").getInputStream());
-        Graphics2D g2d = plantilla.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    public byte[] generarCertificadoPdf(String nombre, String apellido, String dni) throws IOException {
+        InputStream is = new ClassPathResource("static/plantillas/certificado.pdf").getInputStream();
+        byte[] pdfBytes = is.readAllBytes();
+        PDDocument document = Loader.loadPDF(pdfBytes);
 
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Times New Roman", Font.PLAIN, 102));
-        g2d.drawString(assistanceResponse.getName() + " " + assistanceResponse.getLastName(), 320, 740);
+        PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
 
-        g2d.setFont(new Font("Times New Roman", Font.PLAIN, 28));
-        g2d.drawString(assistanceResponse.getEvent().getStartDate().toLocalDate().toString(), 1460, 880);
-        g2d.drawString(assistanceResponse.getRolPrincipal(), 805, 930);
+        if (acroForm != null) {
+            PDField campo = acroForm.getField("Text1");
+            if (campo == null && !acroForm.getFields().isEmpty()) {
+                campo = acroForm.getFields().get(0);
+            }
 
-        g2d.dispose();
+            if (campo != null) {
+                String nombreCompleto = nombre + " " + apellido + " DNI " + dni;
+
+                PDFont font = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+
+                PDRectangle rect = campo.getWidgets().get(0).getRectangle();
+                float fieldWidth = rect.getWidth() - 10;
+                float fontSize = 30f;
+                float textWidth = (font.getStringWidth(nombreCompleto) / 1000) * fontSize;
+
+                while (textWidth > fieldWidth && fontSize > 8) {
+                    fontSize -= 0.5f;
+                    textWidth = (font.getStringWidth(nombreCompleto) / 1000) * fontSize;
+                }
+
+                PDResources dr = acroForm.getDefaultResources();
+                if (dr == null) {
+                    dr = new PDResources();
+                    acroForm.setDefaultResources(dr);
+                }
+
+                COSName fontName = dr.add(font);
+
+                String daString = "/" + fontName.getName() + " " + fontSize + " Tf 0 g";
+                ((PDVariableText) campo).setDefaultAppearance(daString);
+
+                campo.setValue(nombreCompleto);
+                acroForm.flatten();
+            }
+        }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(plantilla, "png", baos);
+        document.save(baos);
+        document.close();
+
         return baos.toByteArray();
     }
-    
+
 }

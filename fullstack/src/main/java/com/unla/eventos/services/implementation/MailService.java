@@ -101,7 +101,7 @@ public class MailService implements IMailService {
 
             // Adjuntar el Certificado
             ByteArrayResource qrCodeResource = new ByteArrayResource(qrCodeBytes);
-            mimeMessageHelper.addAttachment("certificate.png", qrCodeResource);
+            mimeMessageHelper.addAttachment("certificate.pdf", qrCodeResource);
             
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {

@@ -41,6 +41,8 @@ public class QRController {
         	} else {
 				List<AssistanceDays> assistanceDayList = assistanceDaysService.findByAssistanceResponseId(assistanceResponse.getId());
 				LocalDate today = LocalDate.now();
+				assistanceResponse.setPresent(true);
+				assistanceResponseService.save(assistanceResponse);
 
 				// Verificar si ya se marcó presente hoy
 				boolean alreadyPresentToday = assistanceDayList.stream()

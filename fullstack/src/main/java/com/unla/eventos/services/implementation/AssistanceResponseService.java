@@ -40,7 +40,7 @@ public class AssistanceResponseService implements IAssistanceResponseService {
 	private IMailService mailService;
 
 	@Autowired
-    private IAssistanceDaysService assistanceDaysService;
+	private IAssistanceDaysService assistanceDaysService;
 
 	@Autowired
 	private IEventDaysService eventDaysService;
@@ -90,7 +90,14 @@ public class AssistanceResponseService implements IAssistanceResponseService {
 				response.setTipoInscripcion(getCellValue(currentRow.getCell(9)));
 				response.setSource("Importado desde Excel");
 				response.setWelcomeMailSent(false);
-				response.setPresent(false);
+
+				Cell celda = currentRow.getCell(14);
+				String valor = celda != null ? getCellValue(celda).trim().toLowerCase() : "";
+				boolean present = false;
+				if (valor.equals("verdadero")) {
+					present = true;
+				}
+				response.setPresent(present);
 				response.setAssistanceCertifySent(false);
 				response.setQRCode(UUID.randomUUID().toString());
 				response.setEvent(event);
@@ -119,61 +126,62 @@ public class AssistanceResponseService implements IAssistanceResponseService {
 		}
 	}
 
-    @Async
-    public void sendMailsForNewResponses(int eventId) throws Exception {
-    	Optional<Event> eventOp = eventService.findById(eventId);
-    	if(eventOp.isPresent()) {
-    		Event event = eventOp.get();
-    		List<AssistanceResponse> responsesToSendEmail = assistanceResponseRepository.findByEventIdAndWelcomeMailSent(eventId, false);
-    		System.out.println("INICIA ENVIO DE MAILS DE BIENVENIDA");
-    		for (AssistanceResponse response : responsesToSendEmail) {
-        		try {
-        			mailService.prepareAndSendEmail(response.getQRCode(), response.getName(), response.getLastName(),
-        					event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
-        					response.getEmail());
-            		response.setWelcomeMailSent(true);
-            		this.save(response);
+	@Async
+	public void sendMailsForNewResponses(int eventId) throws Exception {
+		Optional<Event> eventOp = eventService.findById(eventId);
+		if (eventOp.isPresent()) {
+			Event event = eventOp.get();
+			List<AssistanceResponse> responsesToSendEmail = assistanceResponseRepository
+					.findByEventIdAndWelcomeMailSent(eventId, false);
+			System.out.println("INICIA ENVIO DE MAILS DE BIENVENIDA");
+			for (AssistanceResponse response : responsesToSendEmail) {
+				try {
+					mailService.prepareAndSendEmail(response.getQRCode(), response.getName(), response.getLastName(),
+							event.getName(), event.getStartDate(), event.getEndDate(), event.getMailContact(),
+							response.getEmail());
+					response.setWelcomeMailSent(true);
+					this.save(response);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					e.printStackTrace();
 					throw e;
 				}
-    		}
-    		System.out.println("FINALIZA ENVIO DE MAILS DE BIENVENIDA, mails enviados: " + responsesToSendEmail.size());
-    	}
-    }
-    
-    private String getCellValue(Cell cell) {
-        if (cell != null) {
-            DataFormatter dataFormatter = new DataFormatter();
-            return dataFormatter.formatCellValue(cell);
-        }
-        return null;
-    }
+			}
+			System.out.println("FINALIZA ENVIO DE MAILS DE BIENVENIDA, mails enviados: " + responsesToSendEmail.size());
+		}
+	}
 
-    public Optional<Event> findEventByUniqueCode(String uniqueCode) {
-        return eventService.findByUniqueCode(uniqueCode);
-    }
-    
-    public Optional<Event> findEventById(int eventId) {
-        return eventService.findById(eventId);
-    }
-    
+	private String getCellValue(Cell cell) {
+		if (cell != null) {
+			DataFormatter dataFormatter = new DataFormatter();
+			return dataFormatter.formatCellValue(cell);
+		}
+		return null;
+	}
+
+	public Optional<Event> findEventByUniqueCode(String uniqueCode) {
+		return eventService.findByUniqueCode(uniqueCode);
+	}
+
+	public Optional<Event> findEventById(int eventId) {
+		return eventService.findById(eventId);
+	}
+
 	public AssistanceResponse findByQRCode(String QRCode) {
 		return assistanceResponseRepository.findByQRCode(QRCode);
 	}
-	
+
 	public Optional<AssistanceResponse> findByEmailAndEventId(String email, int eventId) {
 		return assistanceResponseRepository.findByEmailAndEventId(email, eventId);
 	}
-    
-    public AssistanceResponse save(AssistanceResponse assistanceResponse) {
-        return assistanceResponseRepository.save(assistanceResponse);
-    }
-    
-    public List<AssistanceResponse> findByEventId(int eventId) {
-        return assistanceResponseRepository.findByEventId(eventId);
-    }
+
+	public AssistanceResponse save(AssistanceResponse assistanceResponse) {
+		return assistanceResponseRepository.save(assistanceResponse);
+	}
+
+	public List<AssistanceResponse> findByEventId(int eventId) {
+		return assistanceResponseRepository.findByEventId(eventId);
+	}
 
 	@Override
 	public List<AssistanceResponse> findByEventIdWithEvent(int eventId) {
