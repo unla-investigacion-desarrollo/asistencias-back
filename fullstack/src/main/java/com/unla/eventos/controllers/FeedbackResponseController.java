@@ -37,6 +37,7 @@ public class FeedbackResponseController {
 
             model.addAttribute("eventName", event.getName());
             model.addAttribute("imagePath", event.getImagePath());
+            model.addAttribute("collaboratorImagePath", event.getCollaboratorImagePath());
             model.addAttribute("title", event.getTitle());
             model.addAttribute("description", event.getDescription());
             model.addAttribute("eventStartDate", FunctionsHelper.formatLocalDateToARGTime(event.getStartDate()));

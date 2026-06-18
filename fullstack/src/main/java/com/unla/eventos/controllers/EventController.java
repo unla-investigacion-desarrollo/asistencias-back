@@ -94,18 +94,42 @@ public class EventController {
     }
 
     @PostMapping
-    public String save(@ModelAttribute Event event, @RequestParam MultipartFile image) {
+    public String save(@ModelAttribute Event event,
+                       @RequestParam("image") MultipartFile image,
+                       @RequestParam("collaboratorImage") MultipartFile collaboratorImage,
+                       @RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage,
+                       @RequestParam(value = "removeCollaboratorImage", defaultValue = "false") boolean removeCollaboratorImage) {
     	try {
+    		Optional<Event> existingEventOpt = event.getId() > 0 ? eventService.findById(event.getId()) : Optional.empty();
+
     		if (!image.isEmpty() && image.getContentType().equals("image/png")) {
-                String imagePath = saveImage(image);
-                event.setImagePath(imagePath);
-            } else {
-    			Optional<Event> existingEventOpt = event.getId() > 0 ? eventService.findById(event.getId()) : Optional.empty();
-    			if(existingEventOpt.isPresent() && existingEventOpt.get().getImagePath() != null && !existingEventOpt.get().getImagePath().isEmpty()) {
+    			if (existingEventOpt.isPresent() && existingEventOpt.get().getImagePath() != null) {
     				deleteImage(existingEventOpt.get().getImagePath());
-                    event.setImagePath(null);
     			}
+    			event.setImagePath(saveImage(image));
+    		} else if (removeImage) {
+    			if (existingEventOpt.isPresent() && existingEventOpt.get().getImagePath() != null) {
+    				deleteImage(existingEventOpt.get().getImagePath());
+    			}
+    			event.setImagePath(null);
+    		} else if (existingEventOpt.isPresent()) {
+    			event.setImagePath(existingEventOpt.get().getImagePath());
     		}
+
+    		if (!collaboratorImage.isEmpty() && collaboratorImage.getContentType().equals("image/png")) {
+    			if (existingEventOpt.isPresent() && existingEventOpt.get().getCollaboratorImagePath() != null) {
+    				deleteImage(existingEventOpt.get().getCollaboratorImagePath());
+    			}
+    			event.setCollaboratorImagePath(saveImage(collaboratorImage));
+    		} else if (removeCollaboratorImage) {
+    			if (existingEventOpt.isPresent() && existingEventOpt.get().getCollaboratorImagePath() != null) {
+    				deleteImage(existingEventOpt.get().getCollaboratorImagePath());
+    			}
+    			event.setCollaboratorImagePath(null);
+    		} else if (existingEventOpt.isPresent()) {
+    			event.setCollaboratorImagePath(existingEventOpt.get().getCollaboratorImagePath());
+    		}
+
     		eventService.save(event);
             eventDaysService.save(event);
 		} catch (Exception e) {

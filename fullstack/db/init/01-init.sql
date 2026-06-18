@@ -63,12 +63,12 @@ ADD COLUMN tipo_inscripcion VARCHAR(255),
 ADD COLUMN source VARCHAR(255),
 ADD COLUMN welcome_mail_sent BIT(1) NOT NULL DEFAULT 0;
 
-INSERT INTO `eventos`.`user`
+INSERT INTO `user`
 (`created_at`, `enabled`, `password`, `updated_at`, `username`)
 VALUES
 ('2024-01-07 00:00:00', TRUE, '$2a$10$uXx1ScuQG5/TdSXm1Jm4TekjXJfzu9/vqhZxJGdNa6NG9abA.EZk.', '2024-01-07 00:00:00', 'admin');
 
-INSERT INTO `eventos`.`user_role`
+INSERT INTO `user_role`
 (`created_at`, `role`, `updated_at`, `user_id`)
 VALUES
 ('2024-01-07 00:00:00', 'ROLE_ADMIN', '2024-01-07 00:00:00', 1);

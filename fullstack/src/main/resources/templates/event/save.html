@@ -91,12 +91,34 @@
 					    <input type="file" id="image" name="image" accept="image/png" />
 						<br/><br/>
 						<th:block th:if="${event.imagePath != null}">
-							<p><b>Imagen actual (no guarde sin cargarla nuevamente o se borrará)</b<></p>
-							<img th:src="@{/images/events/{filename}(filename=${event.imagePath})}" alt="Event Image" />
+							<p><b>Imagen actual:</b></p>
+							<img th:src="@{/images/events/{filename}(filename=${event.imagePath})}" alt="Event Image" style="max-width: 200px;" />
+							<br/>
+							<label>
+								<input type="checkbox" name="removeImage" value="true" />
+								Quitar imagen
+							</label>
 							<br/><br/>
 						</th:block>
 						<th:block th:if="${event.imagePath == null}">
 						    <p>Sin imagen prefefinida</p>
+							<br/><br/>
+						</th:block>
+						<label for="collaboratorImage">Logo del colaborador en .png (opcional):</label>
+					    <input type="file" id="collaboratorImage" name="collaboratorImage" accept="image/png" />
+						<br/><br/>
+						<th:block th:if="${event.collaboratorImagePath != null}">
+							<p><b>Logo actual del colaborador:</b></p>
+							<img th:src="@{/images/events/{filename}(filename=${event.collaboratorImagePath})}" alt="Collaborator Logo" style="max-width: 200px;" />
+							<br/>
+							<label>
+								<input type="checkbox" name="removeCollaboratorImage" value="true" />
+								Quitar logo
+							</label>
+							<br/><br/>
+						</th:block>
+						<th:block th:if="${event.collaboratorImagePath == null}">
+						    <p>Sin logo de colaborador</p>
 							<br/><br/>
 						</th:block>
 						<button type="submit">Save</button>

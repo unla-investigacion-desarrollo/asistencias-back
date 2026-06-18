@@ -31,7 +31,7 @@ public class ImageController {
                     .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(imagePath))
                     .body(image);
         } else {
-            throw new RuntimeException("Could not read the file!");
+            return ResponseEntity.notFound().build();
         }
     }
 }
