@@ -27,6 +27,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         } else {
             errorParam = "error_general";
         }
-        response.sendRedirect("/eventos/login?" + errorParam);
+        request.getSession().setAttribute("loginError", errorParam);
+        response.sendRedirect("/eventos/login");
     }
 }
