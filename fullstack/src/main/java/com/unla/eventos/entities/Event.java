@@ -43,6 +43,8 @@ public class Event {
     
     private String imagePath;
     
+    private String collaboratorImagePath;
+    
     private String title;
     
     private String description;

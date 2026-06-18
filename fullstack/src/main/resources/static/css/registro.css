@@ -25,7 +25,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: #ED6E21;
+  background: #91001F;
 }
 .container {
   position: relative;
@@ -106,7 +106,7 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #ED6E21;
+  background: #91001F;
 }
 .form button.disabled-button {
   background-color: grey !important;

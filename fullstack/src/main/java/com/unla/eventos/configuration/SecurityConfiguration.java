@@ -47,6 +47,7 @@ public class SecurityConfiguration {
 					login.usernameParameter("username");
 					login.passwordParameter("password");
 					login.defaultSuccessUrl("/loginsuccess");
+					login.failureHandler(new CustomAuthenticationFailureHandler());
 					login.permitAll();
 				})
 				.logout(logout -> {
@@ -67,6 +68,7 @@ public class SecurityConfiguration {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passwordEncoder());
 		provider.setUserDetailsService(userService);
+		provider.setHideUserNotFoundExceptions(false);
 		return provider;
 	}
 

@@ -12,7 +12,7 @@
         rel="stylesheet">
     <link href="/eventos/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body style="background-color:#ED6E21; background-image:none" class="bg-gradient-primary">
+<body style="background-color:#91001F; background-image:none" class="bg-gradient-primary">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-12 col-md-9">
@@ -29,6 +29,18 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Ingreso a UNLa eventos</h1>
+                                    </div>
+                                    <div th:if="${param.usuario_no_existe != null}" class="alert alert-danger" role="alert">
+                                        El usuario ingresado no existe.
+                                    </div>
+                                    <div th:if="${param.credenciales_invalidas != null}" class="alert alert-danger" role="alert">
+                                        Contraseña incorrecta.
+                                    </div>
+                                    <div th:if="${param.usuario_deshabilitado != null}" class="alert alert-danger" role="alert">
+                                        El usuario se encuentra deshabilitado.
+                                    </div>
+                                    <div th:if="${param.error_general != null}" class="alert alert-danger" role="alert">
+                                        Error al iniciar sesión. Intente nuevamente.
                                     </div>
                                     <form th:action="@{/loginprocess}" method="post" class="user">
                                         <div class="form-group">
